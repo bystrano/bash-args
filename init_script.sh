@@ -14,7 +14,7 @@ file="$(readlink -f "$file")"
 script_file="$(basename "$file")"
 # shellcheck disable=2034
 script_dir="$(dirname "$file")"
-cmd_dir="$(dirname "$(readlink -f "$0")")"
+cmd_dir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 # charger les fichiers du dossier lib/
 # shellcheck source=/dev/null
