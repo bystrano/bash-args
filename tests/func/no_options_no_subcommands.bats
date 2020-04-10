@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-SCRIPT=tests/fixtures/simple_no_options_no_subcommands.sh
+SCRIPT=tests/fixtures/no_options_no_subcommands.sh
 
 @test "do no harm" {
     run bash "$SCRIPT"
@@ -12,7 +12,7 @@ SCRIPT=tests/fixtures/simple_no_options_no_subcommands.sh
     expected=$(cat << EOF
 A simple script that takes no options nor subcommands.
 
-Usage : simple_no_options_no_subcommands.sh [OPTIONS]
+Usage : no_options_no_subcommands.sh [OPTIONS]
 
 Options :
 
@@ -28,7 +28,7 @@ EOF
     expected=$(cat << EOF
 A simple script that takes no options nor subcommands.
 
-Usage : simple_no_options_no_subcommands.sh [OPTIONS]
+Usage : no_options_no_subcommands.sh [OPTIONS]
 
 Options :
 
