@@ -5,7 +5,7 @@ _opt_get_all () {
     local options
 
     # shellcheck disable=SC2154
-    options="$( _meta_get "${script_dir}/spipsh" "options" )"
+    options="$( _meta_get "${script_dir}/${script_file}" "options" )"
     echo "$options" | awk '
 BEGIN { RS="%% " }
 
@@ -17,7 +17,7 @@ BEGIN { RS="%% " }
 
 _opt_get_param () {
 
-    _meta_get_option "${script_dir}/spipsh" "$1" "$2"
+    _meta_get_option "${script_dir}/${script_file}" "$1" "$2"
 }
 
 _opt_expand_short_opts () {
@@ -55,7 +55,7 @@ opt_parse () {
     set -- $(_opt_expand_short_opts $@)
 
     # parser et valider les arguments
-    spipsh_opts="";
+    cmd_opts="";
     cmd_args=()
     while [[ -n "${1+x}" ]]; do
         if [[ ! "$1" =~ ^- ]]; then
@@ -65,7 +65,7 @@ opt_parse () {
                 cmd_args+=("$1")
             fi
         else
-            spipsh_opts="$spipsh_opts $1";
+            cmd_opts="$cmd_opts $1";
             opt="$1"
             opt_found=0
 
@@ -87,7 +87,7 @@ opt_parse () {
                         out_usage_error "L'option $opt nécessite un argument."
                     fi
                     declare -g "$opt_variable=$1"
-                    spipsh_opts="$spipsh_opts $1"
+                    cmd_opts="$cmd_opts $1"
                 fi
 
                 break;
