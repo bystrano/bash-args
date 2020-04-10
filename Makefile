@@ -19,7 +19,7 @@ $(STATE_DIR) vendor:
 
 
 test: | $(BATS)
-	$(BATS) tests/func/*
+	$(BATS) $(BATS_OPTS) tests/func/*
 
 $(BATS): | vendor
 	git clone $(BATS_REPO) vendor/bats
@@ -28,5 +28,5 @@ $(BATS): | vendor
 lint: $(STATE_DIR)/lint
 
 $(STATE_DIR)/lint: $(SRC_FILES) | $(STATE_DIR)
-	shellcheck $(SRC_FILES)
+	shellcheck $(SHELLCHECK_OPTS) $(SRC_FILES)
 	@touch $@
