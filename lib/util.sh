@@ -10,6 +10,7 @@ util_bin_ok () {
 util_ssh_exec () {
     util_bin_ok "ssh";
 
+    # shellcheck disable=2154,2029
     ssh "$ssh_user"@"$prod_host" "$1"
 }
 
