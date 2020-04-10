@@ -79,13 +79,14 @@ opt_parse () {
                 fi
 
                 opt_found=1
-                if [[ -n "$opt_value" ]]; then
-                    declare -g "$opt_variable=$opt_value"
-                else
-                    shift
-                    if [[ -z "${1+x}" ]]; then
+                if [[ -z "${2+x}" ]]; then
+                    if [[ -n "$opt_value" ]]; then
+                        declare -g "$opt_variable=$opt_value"
+                    else
                         out_usage_error "The $opt option requires an argument."
                     fi
+                else
+                    shift
                     declare -g "$opt_variable=$1"
                     CMD_OPTS="$CMD_OPTS $1"
                 fi

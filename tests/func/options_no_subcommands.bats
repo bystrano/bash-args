@@ -78,3 +78,21 @@ EOF
     assert_equals "$status" 0
     assert_equals "$output" "opt-req: test"
 }
+
+@test "$NAME opt-opt -- can be omitted" {
+    run grep opt-opt < <(bash "$SCRIPT")
+    assert_equals "$status" 0
+    assert_equals "$output" "opt-opt: opt_default"
+}
+
+@test "$NAME opt-opt -- argument can be omitted" {
+    run grep opt-opt < <(bash "$SCRIPT" --opt-opt)
+    assert_equals "$status" 0
+    assert_equals "$output" "opt-opt: opt_value"
+}
+
+@test "$NAME opt-opt -- argument can be set" {
+    run grep opt-opt < <(bash "$SCRIPT" --opt-opt test)
+    assert_equals "$status" 0
+    assert_equals "$output" "opt-opt: test"
+}
