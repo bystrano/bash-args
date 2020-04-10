@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-NAME="options - no subcommands : "
-SCRIPT=tests/fixtures/options_no_subcommands.sh
+NAME="options:"
+SCRIPT=tests/fixtures/options.sh
 
 load ../helper
 
@@ -21,7 +21,7 @@ EOF
     expected=$(cat << EOF
 A simple script that takes some options but no subcommands.
 
-Usage : options_no_subcommands.sh [OPTIONS]
+Usage : options.sh [OPTIONS]
 
 Options :
 
@@ -41,49 +41,49 @@ EOF
     assert_equals "$output" "$expected"
 }
 
-@test "$NAME flag -- can be omitted" {
+@test "$NAME flag - can be omitted" {
     run grep flag < <(bash "$SCRIPT")
     assert_equals "$status" 0
     assert_equals "$output" "flag: 0"
 }
 
-@test "$NAME flag -- can be used" {
+@test "$NAME flag - can be used" {
     run grep flag < <(bash "$SCRIPT" --flag)
     assert_equals "$status" 0
     assert_equals "$output" "flag: 1"
 }
 
-@test "$NAME opt-req -- can be omitted" {
+@test "$NAME opt-req - can be omitted" {
     run grep opt-req < <(bash "$SCRIPT")
     assert_equals "$status" 0
     assert_equals "$output" "opt-req: opt_default"
 }
 
-@test "$NAME opt-req -- argument cannot be omitted" {
+@test "$NAME opt-req - argument cannot be omitted" {
     run bash "$SCRIPT" --opt-req
     assert_equals "$status" 2
     assert_equals "$output" "$(usage_error_format "The --opt-req option requires an argument.")"
 }
 
-@test "$NAME opt-req -- argument can be set" {
+@test "$NAME opt-req - argument can be set" {
     run grep opt-req < <(bash "$SCRIPT" --opt-req test)
     assert_equals "$status" 0
     assert_equals "$output" "opt-req: test"
 }
 
-@test "$NAME opt-opt -- can be omitted" {
+@test "$NAME opt-opt - can be omitted" {
     run grep opt-opt < <(bash "$SCRIPT")
     assert_equals "$status" 0
     assert_equals "$output" "opt-opt: opt_default"
 }
 
-@test "$NAME opt-opt -- argument can be omitted" {
+@test "$NAME opt-opt - argument can be omitted" {
     run grep opt-opt < <(bash "$SCRIPT" --opt-opt)
     assert_equals "$status" 0
     assert_equals "$output" "opt-opt: opt_value"
 }
 
-@test "$NAME opt-opt -- argument can be set" {
+@test "$NAME opt-opt - argument can be set" {
     run grep opt-opt < <(bash "$SCRIPT" --opt-opt test)
     assert_equals "$status" 0
     assert_equals "$output" "opt-opt: test"

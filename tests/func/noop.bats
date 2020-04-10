@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-NAME="no options - no subcommands : "
-SCRIPT=tests/fixtures/no_options_no_subcommands.sh
+NAME="no options:"
+SCRIPT=tests/fixtures/noop.sh
 
 @test "$NAME do no harm" {
     run bash "$SCRIPT"
@@ -13,7 +13,7 @@ SCRIPT=tests/fixtures/no_options_no_subcommands.sh
     expected=$(cat << EOF
 A simple script that takes no options nor subcommands.
 
-Usage : no_options_no_subcommands.sh [OPTIONS]
+Usage : noop.sh [OPTIONS]
 
 Options :
 
@@ -29,7 +29,7 @@ EOF
     expected=$(cat << EOF
 A simple script that takes no options nor subcommands.
 
-Usage : no_options_no_subcommands.sh [OPTIONS]
+Usage : noop.sh [OPTIONS]
 
 Options :
 
