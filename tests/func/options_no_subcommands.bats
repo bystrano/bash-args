@@ -5,7 +5,15 @@ SCRIPT=tests/fixtures/options_no_subcommands.sh
 
 @test "$NAME do no harm" {
     run bash "$SCRIPT"
-    [ "$output" = "done" ]
+    expected=$(cat << EOF
+flag: 0
+opt-req: opt_default
+opt-opt: opt_default
+req-req: 
+req-opt: 
+EOF
+)
+    [ "$output" = "$expected" ]
 }
 
 @test "$NAME do help" {
@@ -37,4 +45,14 @@ Options :
 EOF
             )
     [ "$output" = "$expected" ]
+}
+
+@test "$NAME flag -- can be omitted" {
+    run grep flag < <(bash "$SCRIPT")
+    [ "$output" = "flag: 0" ]
+}
+
+@test "$NAME flag -- can be used" {
+    run grep flag < <(bash "$SCRIPT" --flag)
+    [ "$output" = "flag: 1" ]
 }

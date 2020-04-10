@@ -29,4 +29,9 @@ set -euo pipefail
 # shellcheck source=/dev/null
 . "$(dirname "$0")"/../../init_script.sh
 
-echo "done"
+
+printf "flag: %s\n" "${flag:=}"
+printf "opt-req: %s\n" "${opt_req:=}"
+printf "opt-opt: %s\n" "${opt_opt:=}"
+printf "req-req: %s\n" "${req_req:=}"
+printf "req-opt: %s\n" "${req_opt:=}"
