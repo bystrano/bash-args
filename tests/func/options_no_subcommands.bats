@@ -3,6 +3,8 @@
 NAME="options - no subcommands : "
 SCRIPT=tests/fixtures/options_no_subcommands.sh
 
+load ../helper
+
 @test "$NAME do no harm" {
     run bash "$SCRIPT"
     expected=$(cat << EOF
@@ -13,7 +15,7 @@ req-req:
 req-opt: 
 EOF
 )
-    [ "$output" = "$expected" ]
+    assert_equals "$output" "$expected"
 }
 
 @test "$NAME do help" {
@@ -44,15 +46,35 @@ Options :
           A requiered option that may take an argument.
 EOF
             )
-    [ "$output" = "$expected" ]
+    assert_equals "$output" "$expected"
 }
 
 @test "$NAME flag -- can be omitted" {
     run grep flag < <(bash "$SCRIPT")
-    [ "$output" = "flag: 0" ]
+    assert_equals "$status" 0
+    assert_equals "$output" "flag: 0"
 }
 
 @test "$NAME flag -- can be used" {
     run grep flag < <(bash "$SCRIPT" --flag)
-    [ "$output" = "flag: 1" ]
+    assert_equals "$status" 0
+    assert_equals "$output" "flag: 1"
+}
+
+@test "$NAME opt-req -- can be omitted" {
+    run grep opt-req < <(bash "$SCRIPT")
+    assert_equals "$status" 0
+    assert_equals "$output" "opt-req: opt_default"
+}
+
+@test "$NAME opt-req -- argument cannot be omitted" {
+    run bash "$SCRIPT" --opt-req
+    assert_equals "$status" 2
+    assert_equals "$output" "$(usage_error_format "The --opt-req option requires an argument.")"
+}
+
+@test "$NAME opt-req -- argument can be set" {
+    run grep opt-req < <(bash "$SCRIPT" --opt-req test)
+    assert_equals "$status" 0
+    assert_equals "$output" "opt-req: test"
 }

@@ -84,7 +84,7 @@ opt_parse () {
                 else
                     shift
                     if [[ -z "${1+x}" ]]; then
-                        out_usage_error "L'option $opt nécessite un argument."
+                        out_usage_error "The $opt option requires an argument."
                     fi
                     declare -g "$opt_variable=$1"
                     CMD_OPTS="$CMD_OPTS $1"
@@ -98,7 +98,7 @@ opt_parse () {
                     _help_print
                     exit;
                 fi
-                out_usage_error "option invalide : $opt"
+                out_usage_error "invalid option : $opt"
             fi
         fi
         shift;
