@@ -38,6 +38,8 @@ _help_usage () {
     # shellcheck disable=SC2154
     if [[ -n "${usage:="$(_meta_get "${script_dir}/${script_file}" "usage")"}" ]]; then
         printf "%s" "$usage"
+    else
+        printf "%s [OPTIONS]" "$script_file"
     fi
 }
 
