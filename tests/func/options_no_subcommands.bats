@@ -11,8 +11,6 @@ load ../helper
 flag: 0
 opt-req: opt_default
 opt-opt: opt_default
-req-req: 
-req-opt: 
 EOF
 )
     assert_equals "$output" "$expected"
@@ -38,12 +36,6 @@ Options :
 
   --opt-opt | -o (OPT_OPT)
           An optional option that may take a argument.
-
-  --req-req | -R [REQ_REQ]
-          A requiered option that requires an argument.
-
-  --req-opt | -r (REQ_OPT)
-          A requiered option that may take an argument.
 EOF
             )
     assert_equals "$output" "$expected"

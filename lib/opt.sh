@@ -109,8 +109,13 @@ opt_parse () {
     for opt_name in $(_opt_get_all); do
         opt_variable=$(_opt_get_param "$opt_name" "variable")
         opt_default=$(_opt_get_param "$opt_name" "default")
-        if [[ -n "${opt_default}" ]] && [[ -z "${!opt_variable+x}" ]]; then
-            declare -g "$opt_variable=$opt_default"
+
+        if [[ -z "${!opt_variable+x}" ]]; then
+            if [[ -n "${opt_default}" ]]; then
+                declare -g "$opt_variable=$opt_default"
+            else
+                out_usage_error "The --$opt_name option is required."
+            fi
         fi
     done
 }
