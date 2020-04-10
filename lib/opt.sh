@@ -5,7 +5,7 @@ _opt_get_all () {
     local options
 
     # shellcheck disable=SC2154
-    options="$( _meta_get "${script_dir}/${script_file}" "options" )"
+    options="$( _meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "options" )"
     echo "$options" | awk '
 BEGIN { RS="%% " }
 
@@ -17,7 +17,7 @@ BEGIN { RS="%% " }
 
 _opt_get_param () {
 
-    _meta_get_option "${script_dir}/${script_file}" "$1" "$2"
+    _meta_get_option "${SCRIPT_DIR}/${SCRIPT_FILE}" "$1" "$2"
 }
 
 _opt_expand_short_opts () {
@@ -55,17 +55,17 @@ opt_parse () {
     set -- $(_opt_expand_short_opts $@)
 
     # parser et valider les arguments
-    cmd_opts="";
-    cmd_args=()
+    CMD_OPTS="";
+    CMD_ARGS=()
     while [[ -n "${1+x}" ]]; do
         if [[ ! "$1" =~ ^- ]]; then
-            if [[ -z ${cmd+x} ]]; then
-                cmd="$1";
+            if [[ -z ${CMD+x} ]]; then
+                CMD="$1";
             else
-                cmd_args+=("$1")
+                CMD_ARGS+=("$1")
             fi
         else
-            cmd_opts="$cmd_opts $1";
+            CMD_OPTS="$CMD_OPTS $1";
             opt="$1"
             opt_found=0
 
@@ -87,7 +87,7 @@ opt_parse () {
                         out_usage_error "L'option $opt nécessite un argument."
                     fi
                     declare -g "$opt_variable=$1"
-                    cmd_opts="$cmd_opts $1"
+                    CMD_OPTS="$CMD_OPTS $1"
                 fi
 
                 break;

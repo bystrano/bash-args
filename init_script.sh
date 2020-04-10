@@ -4,21 +4,21 @@ set -euo pipefail
 ## Variables
 
 # shellcheck disable=SC2034
-term_width=${term_width:=80}
+TERM_WIDTH=${TERM_WIDTH:=80}
 
 
-read -r _ file < <(caller)
-file="$(readlink -f "$file")"
+read -r _ _file < <(caller)
+_file="$(readlink -f "$_file")"
 
 # shellcheck disable=2034
-script_file="$(basename "$file")"
+SCRIPT_FILE="$(basename "$_file")"
 # shellcheck disable=2034
-script_dir="$(dirname "$file")"
-cmd_dir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+SCRIPT_DIR="$(dirname "$_file")"
+CMD_DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 # charger les fichiers du dossier lib/
 # shellcheck source=/dev/null
-. <(cat "${cmd_dir}"/lib/*.sh)
+. <(cat "${CMD_DIR}"/lib/*.sh)
 
 # shellcheck disable=SC2068
 opt_parse $@

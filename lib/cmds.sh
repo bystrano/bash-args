@@ -3,7 +3,7 @@ set -euo pipefail
 
 _cmds_is_registered () {
 
-    if [[ -f "${script_dir}/cmd/${1}.sh" ]]; then
+    if [[ -f "${SCRIPT_DIR}/cmd/${1}.sh" ]]; then
         return 0
     else
         return 1
@@ -12,8 +12,8 @@ _cmds_is_registered () {
 
 _cmds_get_commands () {
 
-    if [[ -d "${script_dir}/cmd" ]]; then
-        find "${script_dir}/cmd/" -type f -name '*.sh' -print | sort \
+    if [[ -d "${SCRIPT_DIR}/cmd" ]]; then
+        find "${SCRIPT_DIR}/cmd/" -type f -name '*.sh' -print | sort \
             | sed 's#.*/\([^/]*\)\.sh#\1#' \
             | xargs printf '%s '
     fi

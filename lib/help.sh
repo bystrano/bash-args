@@ -27,7 +27,7 @@ _help_description () {
     local description
 
     # shellcheck disable=SC2154
-    if [[ -n "${description:="$(_meta_get "${script_dir}/${script_file}" "description" | fmt --width="${term_width}")"}" ]]; then
+    if [[ -n "${description:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "description" | fmt --width="${TERM_WIDTH}")"}" ]]; then
         printf "%s" "$description"
     fi
 }
@@ -36,10 +36,10 @@ _help_usage () {
     local usage
 
     # shellcheck disable=SC2154
-    if [[ -n "${usage:="$(_meta_get "${script_dir}/${script_file}" "usage")"}" ]]; then
+    if [[ -n "${usage:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "usage")"}" ]]; then
         printf "%s" "$usage"
     else
-        printf "%s [OPTIONS]" "$script_file"
+        printf "%s [OPTIONS]" "$SCRIPT_FILE"
     fi
 }
 
@@ -57,7 +57,7 @@ _help_commands () {
 
     cmd_col_width=$((max_cmd_length + 1))
     # shellcheck disable=SC2154
-    desc_col_width=$((term_width - cmd_col_width - 3))
+    desc_col_width=$((TERM_WIDTH - cmd_col_width - 3))
 
     for cmd in $cmds; do
         printf "  %-${cmd_col_width}s" "$cmd"
@@ -92,7 +92,7 @@ _help_options () {
             usage="$usage [$(_opt_get_param "$option" "variable" | awk '{print toupper($0)}')]"
         fi
         usages+=("$usage")
-        descs+=("$(_opt_get_param "$option" "desc" | fmt --width=$((term_width - desc_offset)))")
+        descs+=("$(_opt_get_param "$option" "desc" | fmt --width=$((TERM_WIDTH - desc_offset)))")
     done
 
     for ((i=0; i<${#usages[@]}; i++)); do

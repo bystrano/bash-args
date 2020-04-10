@@ -47,5 +47,5 @@ BEGIN { RS="%% " }
 _meta_command_get () {
 
     # shellcheck disable=SC2154
-    _meta_get "$script_dir/cmd/${1}.sh" "$2"
+    _meta_get "$SCRIPT_DIR/cmd/${1}.sh" "$2"
 }
