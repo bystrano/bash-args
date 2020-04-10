@@ -90,6 +90,8 @@ _help_options () {
         usage="$(printf "  --%s | -%s" "$option" "$(_opt_get_param "$option" "short")")"
         if [[ -z "$(_opt_get_param "$option" "value")" ]]; then
             usage="$usage [$(_opt_get_param "$option" "variable" | awk '{print toupper($0)}')]"
+        elif [[ "$(_opt_get_param "$option" "type")" == "option" ]]; then
+            usage="$usage ($(_opt_get_param "$option" "variable" | awk '{print toupper($0)}'))"
         fi
         usages+=("$usage")
         descs+=("$(_opt_get_param "$option" "desc" | fmt --width=$((TERM_WIDTH - desc_offset)))")
