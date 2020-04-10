@@ -19,7 +19,7 @@ $(STATE_DIR) vendor:
 
 
 test: | $(BATS)
-	$(BATS) tests/*
+	$(BATS) tests/func/*
 
 $(BATS): | vendor
 	git clone $(BATS_REPO) vendor/bats
