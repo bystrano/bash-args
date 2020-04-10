@@ -17,8 +17,14 @@ STATE_DIR = .make-state
 $(STATE_DIR) vendor:
 	mkdir -p $@
 
+test: test-unit test-func
 
-test: | $(BATS)
+.PHONY: test-unit
+test-unit: | $(BATS)
+	$(BATS) $(BATS_OPTS) tests/unit/*
+
+.PHONY: test-func
+test-func: | $(BATS)
 	$(BATS) $(BATS_OPTS) tests/func/*
 
 $(BATS): | vendor

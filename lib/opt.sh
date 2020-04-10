@@ -49,13 +49,13 @@ _opt_expand_short_opts () {
 }
 
 opt_parse () {
-    local opt opt_short opt_variable opt_value opt_found opt_default
+    local opt opt_short opt_variable opt_value opt_found opt_default opt_and_arg
 
     # shellcheck disable=SC2068,SC2046
     set -- $(_opt_expand_short_opts $@)
 
     # parser et valider les arguments
-    CMD_OPTS="";
+    CMD_OPTS=();
     CMD_ARGS=()
     while [[ -n "${1+x}" ]]; do
         if [[ ! "$1" =~ ^- ]]; then
@@ -65,9 +65,9 @@ opt_parse () {
                 CMD_ARGS+=("$1")
             fi
         else
-            CMD_OPTS="$CMD_OPTS $1";
             opt="$1"
             opt_found=0
+            opt_and_arg="$opt"
 
             for opt_name in $(_opt_get_all); do
                 opt_short=$(_opt_get_param "$opt_name" "short")
@@ -88,7 +88,7 @@ opt_parse () {
                 else
                     shift
                     declare -g "$opt_variable=$1"
-                    CMD_OPTS="$CMD_OPTS $1"
+                    opt_and_arg="$opt_and_arg $1"
                 fi
 
                 break;
@@ -101,6 +101,7 @@ opt_parse () {
                 fi
                 out_usage_error "invalid option : $opt"
             fi
+            CMD_OPTS+=("$opt_and_arg");
         fi
         shift;
     done
