@@ -79,6 +79,11 @@ _help_options () {
     usages=()
     descs=()
 
+    if ! util_in_array "help" "$options"; then
+        usages+=("  --help | -h")
+        descs+=("Show this help.")
+    fi
+
     for option in $options; do
         usage="$(printf "  --%s | -%s" "$option" "$(_opt_get_param "$option" "short")")"
         if [[ -z "$(_opt_get_param "$option" "value")" ]]; then

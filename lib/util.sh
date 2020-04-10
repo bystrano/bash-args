@@ -32,3 +32,17 @@ util_zcat_or_cat () {
 
     ( zcat "$1" 2> /dev/null || cat "$1" )
 }
+
+util_in_array () {
+
+    search="$1";
+    shift;
+
+    for item in "$@"; do
+        if [[ "$item" == "$search" ]]; then
+            return 0;
+        fi
+    done
+
+    return 1
+}

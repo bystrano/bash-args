@@ -13,6 +13,11 @@ SCRIPT=tests/fixtures/simple_no_options_no_subcommands.sh
 A simple script that takes no options nor subcommands.
 
 Usage : my_command
+
+Options :
+
+  --help | -h
+          Show this help.
 EOF
             )
     [ "$output" = "$expected" ]
@@ -24,6 +29,11 @@ EOF
 A simple script that takes no options nor subcommands.
 
 Usage : my_command
+
+Options :
+
+  --help | -h
+          Show this help.
 EOF
 )
     [ "$output" = "$expected" ]
