@@ -2,25 +2,43 @@
 set -euo pipefail
 
 _help_print() {
+    local help desc cmds opts
+
+    if [[ -n "${desc:="$(_help_description)"}" ]]; then
+        printf -v help "%s" "$desc"
+    fi
+
+    if [[ -n "${usage:="$(_help_usage)"}" ]]; then
+        printf -v help "%s\n\nUsage : %s" "${help=:}" "$usage"
+    fi
+
+    if [[ -n "${cmds:="$(_help_commands)"}" ]]; then
+        printf -v help "%s\n\nCommands :\n\n%s" "${help=:}" "$cmds"
+    fi
+
+    if [[ -n "${opts:="$(_help_options)"}" ]]; then
+        printf -v help "%s\n\nOptions :\n\n%s" "${help=:}" "$opts"
+    fi
+
+    printf "%s\n" "${help=:}"
+}
+
+_help_description () {
+    local description
 
     # shellcheck disable=SC2154
-    printf "\
-%s
+    if [[ -n "${description:="$(_meta_get "${script_dir}/${script_file}" "description" | fmt --width="${term_width}")"}" ]]; then
+        printf "%s" "$description"
+    fi
+}
 
-Usage : %s
+_help_usage () {
+    local usage
 
-Commandes :
-
-%s
-
-Options :
-
-%s
-" \
-"$(_meta_get "${script_dir}/${script_file}" "description" | fmt --width="${term_width}")" \
-"$(_meta_get "${script_dir}/${script_file}" "usage")" \
-"$(_help_commands)" \
-"$(_help_options)"
+    # shellcheck disable=SC2154
+    if [[ -n "${usage:="$(_meta_get "${script_dir}/${script_file}" "usage")"}" ]]; then
+        printf "%s" "$usage"
+    fi
 }
 
 _help_commands () {

@@ -94,6 +94,10 @@ opt_parse () {
             done
 
             if [[ $opt_found -eq 0 ]]; then
+                if [[ "$opt" == "-h" ]] || [[ "$opt" == "--help" ]]; then
+                    _help_print
+                    exit;
+                fi
                 out_usage_error "option invalide : $opt"
             fi
         fi
