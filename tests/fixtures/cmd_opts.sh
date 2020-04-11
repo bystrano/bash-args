@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Description : A simple script for testing the argument parsing code.
+# Summary : A simple script for testing the argument parsing code.
 #
 # Options :
 #

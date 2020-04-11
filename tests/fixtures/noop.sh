@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Description : A simple script that takes no options nor subcommands.
+# Summary : A simple script that takes no options nor subcommands.
 #
 set -euo pipefail
 

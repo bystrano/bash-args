@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Description : A simple script that has subcommands.
+# Summary : A simple script that has subcommands.
 #
 # Options :
 #

@@ -4,7 +4,7 @@ set -euo pipefail
 _help_print() {
     local help desc cmds opts
 
-    if [[ -n "${desc:="$(_help_description)"}" ]]; then
+    if [[ -n "${desc:="$(_help_summary)"}" ]]; then
         printf -v help "%s" "$desc"
     fi
 
@@ -23,12 +23,12 @@ _help_print() {
     printf "%s\n" "${help=:}"
 }
 
-_help_description () {
-    local description
+_help_summary () {
+    local summary
 
     # shellcheck disable=SC2154
-    if [[ -n "${description:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "description" | fmt --width="${TERM_WIDTH}")"}" ]]; then
-        printf "%s" "$description"
+    if [[ -n "${summary:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "summary" | fmt --width="${TERM_WIDTH}")"}" ]]; then
+        printf "%s" "$summary"
     fi
 }
 
@@ -69,7 +69,7 @@ _help_commands () {
                 printf "%17s%s\n" " " "$line"
             fi
             ((line_index++))
-        done <<< "$( _meta_command_get "$cmd" "description" | fmt --width="$desc_col_width" )"
+        done <<< "$( _meta_command_get "$cmd" "summary" | fmt --width="$desc_col_width" )"
     done
 }
 

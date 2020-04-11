@@ -1,5 +1,5 @@
 #!/bin/bash
-# Description : A subcommand that prints its options.
+# Summary : A subcommand that prints its options.
 set -euo pipefail
 
 # shellcheck disable=2154
