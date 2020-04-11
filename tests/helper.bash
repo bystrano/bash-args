@@ -2,7 +2,7 @@
 
 assert_equals() {
 
-    diff --side-by-side --color=always <(echo "$1") <(echo "$2");
+    diff <(echo "$1") <(echo "$2");
     [ "$1" == "$2" ]
 }
 
