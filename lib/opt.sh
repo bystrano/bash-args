@@ -31,41 +31,46 @@ _opt_expand_short_opts () {
     done
 
     args=()
-    while [[ -n ${1+x} ]]; do
-        if [[ "$1" =~ ^-[${short_options}]+ ]]; then
-            for (( i=0; i<${#1}; i++ )); do
-                char=${1:$i:1}
+    for item in "${_ARGS[@]}"; do
+        if [[ "$item" =~ ^-[${short_options}]+ ]]; then
+            for (( i=0; i<${#item}; i++ )); do
+                char=${item:$i:1}
                 if [[ $char != '-' ]]; then
                     args+=("-$char")
                 fi
             done
         else
-            args+=("$1")
+            args+=("$item")
         fi
-        shift;
     done
 
-    echo "${args[@]}"
+    _ARGS=("${args[@]}")
 }
 
 opt_parse () {
-    local opt opt_short opt_variable opt_value opt_found opt_default opt_and_arg
+    local opt opt_short opt_variable opt_value opt_found opt_default opt_and_arg item
 
-    # shellcheck disable=SC2068,SC2046
-    set -- $(_opt_expand_short_opts $@)
+    _ARGS=()
+    while [[ -n "${1+x}" ]]; do
+        _ARGS+=("$1")
+        shift
+    done
+
+    _opt_expand_short_opts
 
     # parser et valider les arguments
     CMD_OPTS=();
     CMD_ARGS=()
-    while [[ -n "${1+x}" ]]; do
-        if [[ ! "$1" =~ ^- ]]; then
+    for (( i=0; i<${#_ARGS[@]}; i++ )); do
+        item=${_ARGS[i]}
+        if [[ ! "$item" =~ ^- ]]; then
             if [[ -z ${CMD+x} ]]; then
-                CMD="$1";
+                CMD="$item";
             else
-                CMD_ARGS+=("$1")
+                CMD_ARGS+=("$item")
             fi
         else
-            opt="$1"
+            opt="$item"
             opt_found=0
             opt_and_arg="$opt"
 
@@ -79,16 +84,15 @@ opt_parse () {
                 fi
 
                 opt_found=1
-                if [[ -z "${2+x}" ]]; then
+                if [[ -z "${_ARGS[i+1]+x}" ]]; then
                     if [[ -n "$opt_value" ]]; then
                         declare -g "$opt_variable=$opt_value"
                     else
                         out_usage_error "The $opt option requires an argument."
                     fi
                 else
-                    shift
-                    declare -g "$opt_variable=$1"
-                    opt_and_arg="$opt_and_arg $1"
+                    declare -g "$opt_variable=${_ARGS[i+1]}"
+                    opt_and_arg="$opt_and_arg ${_ARGS[i+1]}"
                 fi
 
                 break;
@@ -103,7 +107,6 @@ opt_parse () {
             fi
             CMD_OPTS+=("$opt_and_arg");
         fi
-        shift;
     done
 
     # initialiser valeurs par défaut si nécessaire
