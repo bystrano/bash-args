@@ -48,7 +48,7 @@ _opt_expand_short_opts () {
 }
 
 opt_parse () {
-    local opt opt_short opt_variable opt_value opt_found opt_default opt_and_arg item
+    local opt opt_short opt_variable opt_value opt_found opt_default opt_and_arg item skip_next
 
     _ARGS=()
     while [[ -n "${1+x}" ]]; do
@@ -62,6 +62,12 @@ opt_parse () {
     CMD_OPTS=();
     CMD_ARGS=()
     for (( i=0; i<${#_ARGS[@]}; i++ )); do
+
+        if [[ "${skip_next:=0}" -eq 1 ]]; then
+            skip_next=0
+            continue
+        fi
+
         item=${_ARGS[i]}
         if [[ ! "$item" =~ ^- ]]; then
             if [[ -z ${CMD+x} ]]; then
@@ -90,9 +96,10 @@ opt_parse () {
                     else
                         out_usage_error "The $opt option requires an argument."
                     fi
-                else
+                elif [[ ! "${_ARGS[i+1]}" =~ ^- ]]; then
                     declare -g "$opt_variable=${_ARGS[i+1]}"
                     opt_and_arg="$opt_and_arg ${_ARGS[i+1]}"
+                    skip_next=1
                 fi
 
                 break;

@@ -11,7 +11,7 @@ load ../helper
 --first hello
 --second world
 EOF
-             )
+)
     assert_equals "$output" "$expected"
 }
 
@@ -23,4 +23,24 @@ EOF
 @test "$NAME argument with spaces in double quote" {
     run bash "$SCRIPT" --first "hello '\"' world"
     assert_equals "$output" "--first hello '\"' world"
+}
+
+@test "$NAME grouped short options" {
+    run bash "$SCRIPT" -fs
+    expected=$(cat << EOF
+-f
+-s
+EOF
+)
+    assert_equals "$output" "$expected"
+}
+
+@test "$NAME grouped short options with argument" {
+    run bash "$SCRIPT" -fs test
+    expected=$(cat << EOF
+-f
+-s test
+EOF
+            )
+    assert_equals "$output" "$expected"
 }
