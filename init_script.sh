@@ -3,9 +3,8 @@ set -euo pipefail
 
 ## Variables
 
-# shellcheck disable=SC2034
 TERM_WIDTH=${TERM_WIDTH:=80}
-
+CMDS_DIR=${CMDS_DIR:=cmd}
 
 read -r _ _file < <(caller)
 _file="$(readlink -f "$_file")"
