@@ -1,5 +1,6 @@
 #!/bin/bash
-# Description : A subcommand that just prints "done".
+# Description : A subcommand that prints its options.
 set -euo pipefail
 
-printf "%s\n" "done"
+# shellcheck disable=2154
+printf "my_option: %s\n" "$opt"
