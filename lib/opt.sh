@@ -47,8 +47,67 @@ _opt_expand_short_opts () {
     _ARGS=("${args[@]}")
 }
 
-opt_parse () {
-    local opt opt_short opt_variable opt_value opt_found opt_default opt_and_arg item skip_next
+_opt_get_name () {
+    local name short
+
+    for name in $(_opt_get_all); do
+
+        short=$(_opt_get_param "$name" "short")
+
+        if [[ "$1" == "-$short" ]] || [[ "$1" == "--$name" ]]; then
+            printf "%s" "$name"
+            break;
+        fi
+    done
+}
+
+_opt_interpret () {
+    local name argument type default value variable
+
+    name="${1##--}"
+    shift
+    argument="$*"
+
+    type=$(_opt_get_param "$name" "type")
+    default=$(_opt_get_param "$name" "default")
+    value=$(_opt_get_param "$name" "value")
+    variable=$(_opt_get_param "$name" "variable")
+
+    if [[ "$type" == "flag" ]]; then
+        declare -g "$variable=$value"
+    else
+        if [[ -n "$argument" ]]; then
+            declare -g "$variable=$argument"
+        elif [[ -n "$value" ]]; then
+            declare -g "$variable=$value"
+        elif [[ "$name" == "help" ]]; then
+            _help_print
+            exit 0
+        else
+            out_usage_error "The $opt option requires an argument."
+        fi
+    fi
+
+}
+
+_opt_interpret_default () {
+    local name variable default
+
+    name="$1"
+    variable=$(_opt_get_param "$name" "variable")
+    default=$(_opt_get_param "$name" "default")
+
+    if [[ -z "${!variable+x}" ]]; then
+        if [[ -n "${default}" ]]; then
+            declare -g "$variable=$default"
+        else
+            out_usage_error "The --$name option is required."
+        fi
+    fi
+}
+
+_opt_parse () {
+    local opt opt_name item skip_next
 
     _ARGS=()
     while [[ -n "${1+x}" ]]; do
@@ -58,7 +117,6 @@ opt_parse () {
 
     _opt_expand_short_opts
 
-    # parser et valider les arguments
     CMD_OPTS=();
     CMD_ARGS=()
     for (( i=0; i<${#_ARGS[@]}; i++ )); do
@@ -69,6 +127,7 @@ opt_parse () {
         fi
 
         item=${_ARGS[i]}
+
         if [[ ! "$item" =~ ^- ]]; then
             if [[ -z ${CMD+x} ]]; then
                 CMD="$item";
@@ -77,56 +136,33 @@ opt_parse () {
             fi
         else
             opt="$item"
-            opt_found=0
-            opt_and_arg="$opt"
+            if [[ "$opt" == "-h" ]] || [[ "$opt" == "--help" ]]; then
+                opt_name="help"
+            else
+                opt_name=$(_opt_get_name "$opt")
+            fi
 
-            for opt_name in $(_opt_get_all); do
-                opt_short=$(_opt_get_param "$opt_name" "short")
-                opt_variable=$(_opt_get_param "$opt_name" "variable")
-                opt_value=$(_opt_get_param "$opt_name" "value")
-
-                if [[ ! "$opt" == "-$opt_short" ]] && [[ ! "$opt" == "--$opt_name" ]]; then
-                    continue;
-                fi
-
-                opt_found=1
-                if [[ -z "${_ARGS[i+1]+x}" ]]; then
-                    if [[ -n "$opt_value" ]]; then
-                        declare -g "$opt_variable=$opt_value"
-                    else
-                        out_usage_error "The $opt option requires an argument."
-                    fi
-                elif [[ ! "${_ARGS[i+1]}" =~ ^- ]]; then
-                    declare -g "$opt_variable=${_ARGS[i+1]}"
-                    opt_and_arg="$opt_and_arg ${_ARGS[i+1]}"
-                    skip_next=1
-                fi
-
-                break;
-            done
-
-            if [[ $opt_found -eq 0 ]]; then
-                if [[ "$opt" == "-h" ]] || [[ "$opt" == "--help" ]]; then
-                    _help_print
-                    exit;
-                fi
+            if [[ -z "$opt_name" ]]; then
                 out_usage_error "invalid option : $opt"
             fi
-            CMD_OPTS+=("$opt_and_arg");
+
+            if [[ "$(_opt_get_param "$opt_name" "type")" == "option" ]] &&
+                   [[ -n "${_ARGS[i+1]+x}" ]] &&
+                   [[ ! "${_ARGS[i+1]}" =~ ^- ]]; then
+                CMD_OPTS+=("--$opt_name ${_ARGS[i+1]}")
+                skip_next=1
+            else
+                CMD_OPTS+=("--$opt_name")
+            fi
         fi
     done
 
-    # initialiser valeurs par défaut si nécessaire
-    for opt_name in $(_opt_get_all); do
-        opt_variable=$(_opt_get_param "$opt_name" "variable")
-        opt_default=$(_opt_get_param "$opt_name" "default")
+    for opt in "${CMD_OPTS[@]}"; do
+        # shellcheck disable=SC2086
+        _opt_interpret $opt
+    done
 
-        if [[ -z "${!opt_variable+x}" ]]; then
-            if [[ -n "${opt_default}" ]]; then
-                declare -g "$opt_variable=$opt_default"
-            else
-                out_usage_error "The --$opt_name option is required."
-            fi
-        fi
+    for opt in $(_opt_get_all); do
+        _opt_interpret_default "$opt"
     done
 }

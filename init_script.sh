@@ -21,4 +21,4 @@ CMD_DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 . <(cat "${CMD_DIR}"/lib/*.sh)
 
 # shellcheck disable=SC2068
-opt_parse "$@"
+_opt_parse "$@"

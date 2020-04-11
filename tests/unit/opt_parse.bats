@@ -28,8 +28,8 @@ EOF
 @test "$NAME grouped short options" {
     run bash "$SCRIPT" -fs
     expected=$(cat << EOF
--f
--s
+--first
+--second
 EOF
 )
     assert_equals "$output" "$expected"
@@ -38,8 +38,8 @@ EOF
 @test "$NAME grouped short options with argument" {
     run bash "$SCRIPT" -fs test
     expected=$(cat << EOF
--f
--s test
+--first
+--second test
 EOF
             )
     assert_equals "$output" "$expected"

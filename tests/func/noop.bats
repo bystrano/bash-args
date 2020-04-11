@@ -3,9 +3,11 @@
 NAME="no options:"
 SCRIPT=tests/fixtures/noop.sh
 
+load ../helper
+
 @test "$NAME do no harm" {
     run bash "$SCRIPT"
-    [ "$output" = "done" ]
+    assert_equals "$output" "done"
 }
 
 @test "$NAME do help" {
@@ -21,7 +23,7 @@ Options :
           Show this help.
 EOF
             )
-    [ "$output" = "$expected" ]
+    assert_equals "$output" "$expected"
 }
 
 @test "$NAME do help (short)" {
@@ -37,5 +39,5 @@ Options :
           Show this help.
 EOF
 )
-    [ "$output" = "$expected" ]
+    assert_equals "$output" "$expected"
 }
