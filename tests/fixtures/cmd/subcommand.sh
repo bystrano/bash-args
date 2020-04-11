@@ -3,4 +3,4 @@
 set -euo pipefail
 
 # shellcheck disable=2154
-printf "my_option: %s\n" "$opt"
+printf "my_option: %s\n" "$my_option"

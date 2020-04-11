@@ -6,7 +6,7 @@
 #
 # %% opt
 # desc="An option that requires a argument."
-# short="o" type="option" variable="opt" default="opt_default"
+# short="o" type="option" variable="my_option" default="opt_default"
 #
 set -euo pipefail
 
