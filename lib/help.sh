@@ -60,7 +60,7 @@ _help_commands () {
     desc_col_width=$((TERM_WIDTH - cmd_col_width - 3))
 
     for cmd in $cmds; do
-        printf "  %-${cmd_col_width}s" "$cmd"
+        printf "  %-${cmd_col_width}s " "$cmd"
         line_index=0
         while IFS= read -r line; do
             if [[ line_index -eq 0 ]]; then

@@ -4,6 +4,10 @@
 #
 set -euo pipefail
 
+# ignore the subcommands
+# shellcheck disable=2034
+CMDS_DIR=_
+
 # shellcheck source=/dev/null
 . "$(dirname "$0")"/../../init_script.sh
 

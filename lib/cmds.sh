@@ -18,3 +18,15 @@ _cmds_get_commands () {
             | xargs printf '%s '
     fi
 }
+
+cmds_do_subcommand () {
+
+    if [[ -f "${cmd_file:=${SCRIPT_DIR}/${CMDS_DIR}/${CMD:=help}.sh}" ]]; then
+        # shellcheck source=/dev/null
+        . "$cmd_file"
+    elif [[ "$CMD" == "help" ]]; then
+        _help_print
+    else
+        out_usage_error "Invalid command : $CMD"
+    fi
+}
