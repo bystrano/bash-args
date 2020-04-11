@@ -2,25 +2,29 @@
 set -euo pipefail
 
 _help_print() {
-    local help desc cmds opts
+    local help summary usage description cmds opts
 
-    if [[ -n "${desc:="$(_help_summary)"}" ]]; then
-        printf -v help "%s" "$desc"
+    if [[ -n "${summary:="$(_help_summary)"}" ]]; then
+        printf -v help "%s" "$summary"
     fi
 
     if [[ -n "${usage:="$(_help_usage)"}" ]]; then
-        printf -v help "%s\n\nUsage : %s" "${help=:}" "$usage"
+        printf -v help "%s\n\nUsage : %s" "${help:=}" "$usage"
+    fi
+
+    if [[ -n "${description:="$(_help_description)"}" ]]; then
+        printf -v help "%s\n\n%s" "${help:=}" "$description"
     fi
 
     if [[ -n "${cmds:="$(_help_commands)"}" ]]; then
-        printf -v help "%s\n\nCommands :\n\n%s" "${help=:}" "$cmds"
+        printf -v help "%s\n\nCommands :\n\n%s" "${help:=}" "$cmds"
     fi
 
     if [[ -n "${opts:="$(_help_options)"}" ]]; then
-        printf -v help "%s\n\nOptions :\n\n%s" "${help=:}" "$opts"
+        printf -v help "%s\n\nOptions :\n\n%s" "${help:=}" "$opts"
     fi
 
-    printf "%s\n" "${help=:}"
+    printf "%s\n" "${help:=}"
 }
 
 _help_summary () {
@@ -40,6 +44,15 @@ _help_usage () {
         printf "%s" "$usage"
     else
         printf "%s [OPTIONS]" "$SCRIPT_FILE"
+    fi
+}
+
+_help_description () {
+    local description
+
+    # shellcheck disable=SC2154
+    if [[ -n "${description:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "description" | fmt --width="${TERM_WIDTH}")"}" ]]; then
+        printf "%s" "$description"
     fi
 }
 

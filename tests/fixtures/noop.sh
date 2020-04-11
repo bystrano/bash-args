@@ -2,6 +2,9 @@
 #
 # Summary : A simple script that takes no options nor subcommands.
 #
+# Description : This is a long description of the commands. This is not
+# necessary here because this command is so simple, but we need an example.
+#
 set -euo pipefail
 
 # ignore the subcommands
