@@ -8,5 +8,9 @@ assert_equals() {
 
 usage_error_format() {
 
-    printf "%s%s%s" "$(tput setaf 3)" "$1" "$(tput sgr 0)"
+    if [[ -n "$(which tput)" ]]; then
+        printf "%s%s%s" "$(tput setaf 3)" "$1" "$(tput sgr 0)"
+    else
+        printf "%s" "$1"
+    fi
 }
