@@ -21,7 +21,7 @@ _opt_get_param () {
 }
 
 _opt_expand_short_opts () {
-    local options short_options args i char
+    local opt item options short_options args i char
 
     options=$(_opt_get_all)
     short_options=""
@@ -84,7 +84,7 @@ _opt_interpret () {
             _help_print
             exit 0
         else
-            out_usage_error "The $opt option requires an argument."
+            out_usage_error "The --$name option requires an argument."
         fi
     fi
 
