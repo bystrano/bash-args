@@ -16,8 +16,10 @@ SCRIPT_DIR="$(dirname "$_file")"
 CMD_DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 # charger les fichiers du dossier lib/
-# shellcheck source=/dev/null
-. <(cat "${CMD_DIR}"/lib/*.sh)
+for _file in "${CMD_DIR}"/lib/*.sh; do
+    # shellcheck source=/dev/null
+    . "$_file"
+done
 
 # shellcheck disable=SC2068
 _opt_parse "$@"

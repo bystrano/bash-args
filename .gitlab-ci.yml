@@ -13,30 +13,25 @@ test:4.4:
 
 test:4.3:
   image: bash:4.3
-  allow_failure: true
   script:
     - make test
 
 test:4.2:
   image: bash:4.2
-  allow_failure: true
   script:
     - make test
 
 test:4.1:
   image: bash:4.1
-  allow_failure: true
   script:
     - make test
 
 test:4.0:
   image: bash:4.0
-  allow_failure: true
   script:
     - make test
 
 test:3.2:
   image: bash:3.2
-  allow_failure: true
   script:
     - make test
