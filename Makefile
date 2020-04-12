@@ -1,6 +1,7 @@
-.PHONY: help    # print this message.
+.PHONY: help    # print this message
 .PHONY: test    # run the test suite
 .PHONY: lint    # run linter
+.PHONY: run     # run an interactive session in docker (see Dockerfile)
 
 BATS      := vendor/bats/bin/bats
 BATS_REPO := https://github.com/bats-core/bats-core.git
@@ -38,3 +39,8 @@ $(STATE_DIR)/lint: $(BASH_SRC) | $(STATE_DIR)
 	@shellcheck $(SHELLCHECK_OPTS) $(BASH_SRC)
 	@echo | awk --lint=invalid $(addprefix -f , $(AWK_SRC))
 	@touch $@
+
+
+run:
+	@docker build -t bash-arg .
+	@docker run -it --rm --mount src=`pwd`,target=/bash-args,type=bind bash-args
