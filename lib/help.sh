@@ -31,7 +31,7 @@ _help_summary () {
     local summary
 
     # shellcheck disable=SC2154
-    if [[ -n "${summary:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "summary" | fmt --width="${TERM_WIDTH}")"}" ]]; then
+    if [[ -n "${summary:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "summary" | util_fmt "${TERM_WIDTH}")"}" ]]; then
         printf "%s" "$summary"
     fi
 }
@@ -51,7 +51,7 @@ _help_description () {
     local description
 
     # shellcheck disable=SC2154
-    if [[ -n "${description:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "description" | fmt --width="${TERM_WIDTH}")"}" ]]; then
+    if [[ -n "${description:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "description" | util_fmt "${TERM_WIDTH}")"}" ]]; then
         printf "%s" "$description"
     fi
 }
@@ -82,7 +82,7 @@ _help_commands () {
                 printf "%17s%s\n" " " "$line"
             fi
             ((line_index++))
-        done <<< "$( _meta_command_get "$cmd" "summary" | fmt --width="$desc_col_width" )"
+        done <<< "$( _meta_command_get "$cmd" "summary" | util_fmt "$desc_col_width" )"
     done
 }
 
@@ -107,7 +107,7 @@ _help_options () {
             usage="$usage ($(_opt_get_param "$option" "variable" | awk '{print toupper($0)}'))"
         fi
         usages+=("$usage")
-        descs+=("$(_opt_get_param "$option" "desc" | fmt --width=$((TERM_WIDTH - desc_offset)))")
+        descs+=("$(_opt_get_param "$option" "desc" | util_fmt $((TERM_WIDTH - desc_offset)))")
     done
 
     for ((i=0; i<${#usages[@]}; i++)); do
