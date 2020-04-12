@@ -20,6 +20,6 @@ util_fmt () {
     if [[ -x "$(command -v fmt)" ]]; then
         fmt --width="$1"
     else
-        fold --spaces --width="$1"
+        fold -s -w "$1"
     fi
 }
