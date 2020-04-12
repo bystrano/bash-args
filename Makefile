@@ -11,7 +11,8 @@ help:
 	@cat Makefile | awk '/^.PHONY:.*#/ { print }' | cut -d' ' -f2-
 
 
-SRC_FILES = $(shell find . -name '*.sh' -type f -not -path './vendor/*')
+BASH_SRC = $(shell find . -name '*.sh' -type f -not -path './vendor/*')
+AWK_SRC = $(shell find lib -name '*.awk' -type f)
 STATE_DIR = .make-state
 
 $(STATE_DIR) vendor:
@@ -33,6 +34,7 @@ $(BATS): | vendor
 
 lint: $(STATE_DIR)/lint
 
-$(STATE_DIR)/lint: $(SRC_FILES) | $(STATE_DIR)
-	shellcheck $(SHELLCHECK_OPTS) $(SRC_FILES)
+$(STATE_DIR)/lint: $(BASH_SRC) | $(STATE_DIR)
+	@shellcheck $(SHELLCHECK_OPTS) $(BASH_SRC)
+	@echo | awk --lint=fatal $(addprefix -f , $(AWK_SRC))
 	@touch $@
