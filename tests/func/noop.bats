@@ -13,7 +13,7 @@ load ../helper
 @test "$NAME do help" {
     run bash "$SCRIPT" --help
     . lib/util.sh
-    expected=$(cat | util_fmt 80 << EOF
+    expected=$(util_fmt 80 << EOF
 A simple script that takes no options nor subcommands.
 
 Usage : noop.sh [OPTIONS]
@@ -32,7 +32,7 @@ EOF
 @test "$NAME do help (short)" {
     run bash "$SCRIPT" -h
     . lib/util.sh
-    expected=$(cat | util_fmt 80 << EOF
+    expected=$(util_fmt 80 << EOF
 A simple script that takes no options nor subcommands.
 
 Usage : noop.sh [OPTIONS]

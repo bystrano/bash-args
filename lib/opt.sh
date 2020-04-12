@@ -24,21 +24,23 @@ _opt_expand_short_opts () {
         short_options="$short_options$(_opt_get_param "$opt" "short")"
     done
 
-    args=()
-    for item in "${_ARGS[@]}"; do
-        if [[ "$item" =~ ^-[${short_options}]+ ]]; then
-            for (( i=0; i<${#item}; i++ )); do
-                char=${item:$i:1}
-                if [[ $char != '-' ]]; then
-                    args+=("-$char")
-                fi
-            done
-        else
-            args+=("$item")
-        fi
-    done
+    if [[ "${#_ARGS[@]}" -gt 0 ]]; then
+        args=()
+        for item in "${_ARGS[@]}"; do
+            if [[ "$item" =~ ^-[${short_options}]+ ]]; then
+                for (( i=0; i<${#item}; i++ )); do
+                    char=${item:$i:1}
+                    if [[ $char != '-' ]]; then
+                        args+=("-$char")
+                    fi
+                done
+            else
+                args+=("$item")
+            fi
+        done
 
-    _ARGS=("${args[@]}")
+        _ARGS=("${args[@]}")
+    fi
 }
 
 _opt_get_name () {
@@ -111,7 +113,7 @@ _opt_parse () {
 
     _opt_expand_short_opts
 
-    CMD_OPTS=();
+    CMD_OPTS=()
     CMD_ARGS=()
     for (( i=0; i<${#_ARGS[@]}; i++ )); do
 
@@ -151,10 +153,12 @@ _opt_parse () {
         fi
     done
 
-    for opt in "${CMD_OPTS[@]}"; do
-        # shellcheck disable=SC2086
-        _opt_interpret $opt
-    done
+    if [[ "${#CMD_OPTS[@]}" -gt 0 ]]; then
+        for opt in "${CMD_OPTS[@]}"; do
+            # shellcheck disable=SC2086
+            _opt_interpret $opt
+        done
+    fi
 
     for opt in $(_opt_get_all); do
         _opt_interpret_default "$opt"
