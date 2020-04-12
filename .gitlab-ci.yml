@@ -1,5 +1,5 @@
 before_script:
-  - apk update && apk add make git fmt
+  - apk update && apk add make git
 
 test:4.4:
   image: bash:4.4
