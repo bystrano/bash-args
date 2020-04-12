@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Summary : A simple script for testing the argument parsing code.
 #

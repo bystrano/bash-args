@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Summary : A subcommand that prints its options.
 set -euo pipefail
 

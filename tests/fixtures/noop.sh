@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Summary : A simple script that takes no options nor subcommands.
 #
