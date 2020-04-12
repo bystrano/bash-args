@@ -4,11 +4,11 @@
 #
 # Options :
 #
-# %% req-req
+# % req-req
 # desc="A required option that requires an argument."
 # short="R" type="option" variable="req_req"
 #
-# %% req-opt
+# % req-opt
 # desc="A required option that may take an argument."
 # short="r" type="option" variable="req_opt" value="opt_value"
 #

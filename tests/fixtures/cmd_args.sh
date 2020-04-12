@@ -4,11 +4,11 @@
 #
 # Options :
 #
-# %% first
+# % first
 # desc="An optional option that may take an argument."
 # short="f" type="option" variable="opt_req" value="opt_value" default="opt_default"
 #
-# %% second
+# % second
 # desc="An optional option that may take an argument."
 # short="s" type="option" variable="opt_opt" value="opt_value" default="opt_default"
 #

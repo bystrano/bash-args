@@ -4,7 +4,7 @@
 #
 # Options :
 #
-# %% opt
+# % opt
 # desc="An option that requires a argument."
 # short="o" type="option" variable="my_option" default="opt_default"
 #

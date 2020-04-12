@@ -4,15 +4,15 @@
 #
 # Options :
 #
-# %% flag
+# % flag
 # desc="An option meant to be used as a flag."
 # short="f" type="flag" variable="flag" value="1" default=0
 #
-# %% opt-req
+# % opt-req
 # desc="An optional option that requires a argument."
 # short="O" type="option" variable="opt_req" default="opt_default"
 #
-# %% opt-opt
+# % opt-opt
 # desc="An optional option that may take a argument."
 # short="o" type="option" variable="opt_opt" value="opt_value" default="opt_default"
 #

@@ -36,5 +36,5 @@ lint: $(STATE_DIR)/lint
 
 $(STATE_DIR)/lint: $(BASH_SRC) | $(STATE_DIR)
 	@shellcheck $(SHELLCHECK_OPTS) $(BASH_SRC)
-	@echo | awk --lint=fatal $(addprefix -f , $(AWK_SRC))
+	@echo | awk --lint=invalid $(addprefix -f , $(AWK_SRC))
 	@touch $@

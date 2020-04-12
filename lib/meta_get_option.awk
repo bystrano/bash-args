@@ -1,12 +1,17 @@
 #!/usr/bin/awk
 
-BEGIN { RS="%% " }
+BEGIN { RS="%" }
 
 /[^[:blank:]]/ {
-    if ($1 == option) {
-        cmd = substr($0, length($1)+2) sprintf("\n echo -n $%s", param)
-        if ((cmd | getline result) > 0) {
-            printf "%s", result
+    if (all == 1) {
+        print $1
+    } else {
+        if (option == $1) {
+            cmd = sprintf("%s\n echo -n $%s", substr($0, length($1) + 2), param)
+            if ((cmd | getline result) > 0) {
+                printf "%s", result
+            }
+            close(cmd)
         }
     }
 }
