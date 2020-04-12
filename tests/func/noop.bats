@@ -4,7 +4,6 @@ NAME="no options:"
 SCRIPT=tests/fixtures/noop.sh
 
 load ../helper
-load ../../lib/util.sh
 
 @test "$NAME do no harm" {
     run bash "$SCRIPT"
@@ -13,6 +12,7 @@ load ../../lib/util.sh
 
 @test "$NAME do help" {
     run bash "$SCRIPT" --help
+    . lib/util.sh
     expected=$(cat | util_fmt 80 << EOF
 A simple script that takes no options nor subcommands.
 
@@ -31,7 +31,8 @@ EOF
 
 @test "$NAME do help (short)" {
     run bash "$SCRIPT" -h
-    expected=$(cat util_fmt 80 << EOF
+    . lib/util.sh
+    expected=$(cat | util_fmt 80 << EOF
 A simple script that takes no options nor subcommands.
 
 Usage : noop.sh [OPTIONS]
