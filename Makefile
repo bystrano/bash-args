@@ -42,5 +42,5 @@ $(STATE_DIR)/lint: $(BASH_SRC) | $(STATE_DIR)
 
 
 run:
-	@docker build -t bash-arg .
+	@docker build -t bash-args .
 	@docker run -it --rm --mount src=`pwd`,target=/bash-args,type=bind bash-args

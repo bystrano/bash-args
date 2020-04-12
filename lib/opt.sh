@@ -70,12 +70,12 @@ _opt_interpret () {
     variable=$(_opt_get_param "$name" "variable")
 
     if [[ "$type" == "flag" ]]; then
-        declare -g "$variable=$value"
+        export "$variable=$value"
     else
         if [[ -n "$argument" ]]; then
-            declare -g "$variable=$argument"
+            export "$variable=$argument"
         elif [[ -n "$value" ]]; then
-            declare -g "$variable=$value"
+            export "$variable=$value"
         elif [[ "$name" == "help" ]]; then
             _help_print
             exit 0
@@ -95,7 +95,7 @@ _opt_interpret_default () {
 
     if [[ -z "${!variable+x}" ]]; then
         if [[ -n "${default}" ]]; then
-            declare -g "$variable=$default"
+            export "$variable=$default"
         else
             out_usage_error "The --$name option is required."
         fi
