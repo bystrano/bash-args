@@ -13,6 +13,6 @@ _complete () {
         cur="${_ARGS[((${#_ARGS[@]}-1))]}"
     fi
 
-    compgen -W "item1 item2" -- "${cur}"
+    compgen -W "$(_cmds_get_commands)" -- "${cur}"
     exit;
 }

@@ -6,7 +6,7 @@ SCRIPT=tests/fixtures/subcommands.sh
 load ../helper
 
 @test "$NAME do no harm" {
-    run bash "$SCRIPT" subcommand
+    run bash "$SCRIPT" subcommand1
     expected=$(cat << EOF
 my_option: opt_default
 EOF
@@ -23,7 +23,8 @@ Usage : subcommands.sh [OPTIONS]
 
 Commands :
 
-  subcommand  A subcommand that prints its options.
+  subcommand1  A subcommand that prints its options.
+  subcommand2  A subcommand that does nothing.
 
 Options :
 
@@ -38,7 +39,7 @@ EOF
 }
 
 @test "$NAME options' values are passed to the subcommand" {
-    run bash "$SCRIPT" -o test subcommand
+    run bash "$SCRIPT" -o test subcommand1
     expected=$(cat << EOF
 my_option: test
 EOF
