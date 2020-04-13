@@ -23,3 +23,11 @@ done
 
 # shellcheck disable=SC2068
 _opt_parse "$@"
+
+if [[ "${CMD:=}" == "_complete" ]]; then
+    _complete
+    exit 0
+elif [[ "${CMD:=}" == "_register_autocomplete" ]]; then
+    printf "complete -C \"%s _complete\" %s\n" "$SCRIPT_FILE" "$SCRIPT_FILE"
+    exit 0
+fi
