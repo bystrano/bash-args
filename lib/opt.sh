@@ -102,15 +102,19 @@ _opt_interpret_default () {
     fi
 }
 
-_opt_parse () {
-    local opt opt_name item skip_next
+_opt_get_args_list () {
 
     _ARGS=()
     while [[ -n "${1+x}" ]]; do
         _ARGS+=("$1")
         shift
     done
+}
 
+_opt_parse () {
+    local opt opt_name item skip_next
+
+    _opt_get_args_list "$@"
     _opt_expand_short_opts
 
     CMD_OPTS=()

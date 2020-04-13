@@ -16,3 +16,18 @@ EOF
             )
     assert_equals "$output" "$expected"
 }
+
+@test "$NAME complete long options" {
+    export COMP_LINE="options.sh -"
+    run tests/fixtures/options.sh _complete
+    expected=$(cat << EOF
+-f
+--flag
+-O
+--opt-req
+-o
+--opt-opt
+EOF
+            )
+    assert_equals "$output" "$expected"
+}
