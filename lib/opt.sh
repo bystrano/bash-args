@@ -6,7 +6,7 @@ _opt_get_all () {
 
     # shellcheck disable=SC2154
     options="$( _meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "options" )"
-    echo "$options" | awk -v all=1 -f ${CMD_DIR}/lib/meta_get_option.awk
+    echo "$options" | awk -v all=1 -f "${CMD_DIR:=.}"/lib/meta_get_option.awk
 }
 
 _opt_get_param () {

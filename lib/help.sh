@@ -79,7 +79,7 @@ _help_commands () {
             if [[ line_index -eq 0 ]]; then
                 printf "%s\n" "$line"
             else
-                printf "%17s%s\n" " " "$line"
+                printf "%18s%s\n" " " "$line"
             fi
             ((line_index++))
         done <<< "$( _meta_command_get "$cmd" "summary" | util_fmt "$desc_col_width" )"
