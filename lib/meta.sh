@@ -7,7 +7,7 @@ _meta_get () {
     file="$1"
     meta="$2"
 
-    <"$file" awk -v meta="$meta" -f lib/meta_get.awk
+    <"$file" awk -v meta="$meta" -f ${CMD_DIR}/lib/meta_get.awk
 }
 
 _meta_get_option () {
@@ -15,7 +15,7 @@ _meta_get_option () {
 
     # shellcheck disable=SC2154
     options="$( _meta_get "$1" "options" )"
-    echo "$options" | awk -v option="$2" -v param="$3" -f lib/meta_get_option.awk
+    echo "$options" | awk -v option="$2" -v param="$3" -f ${CMD_DIR}/lib/meta_get_option.awk
 }
 
 _meta_command_get () {
