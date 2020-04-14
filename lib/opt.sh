@@ -77,7 +77,7 @@ _opt_interpret () {
         elif [[ -n "$value" ]]; then
             export "$variable=$value"
         elif [[ "$name" == "help" ]]; then
-            _help_print
+            _help_print_main
             exit 0
         else
             out_usage_error "The --$name option requires an argument."

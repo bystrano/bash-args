@@ -25,7 +25,11 @@ cmds_do_subcommand () {
         # shellcheck source=/dev/null
         . "$cmd_file"
     elif [[ "$CMD" == "help" ]]; then
-        _help_print
+        if [[ ${#CMD_ARGS[@]} -eq 0 ]]; then
+            _help_print_main
+        else
+            _help_print_subcommand "${CMD_ARGS[0]}"
+        fi
     else
         out_usage_error "Invalid command : $CMD"
     fi

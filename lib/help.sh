@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-_help_print() {
-    local help summary usage description cmds opts
+_help_print_main() {
+    local help summary usage description cmds opts file
 
-    if [[ -n "${summary:="$(_help_summary)"}" ]]; then
+    file="${SCRIPT_DIR}/${SCRIPT_FILE}"
+
+    if [[ -n "${summary:="$(_help_summary "$file")"}" ]]; then
         printf -v help "%s" "$summary"
     fi
 
-    if [[ -n "${usage:="$(_help_usage)"}" ]]; then
+    if [[ -n "${usage:="$(_help_usage "$file")"}" ]]; then
         printf -v help "%s\n\nUsage : %s" "${help:=}" "$usage"
     fi
 
-    if [[ -n "${description:="$(_help_description)"}" ]]; then
+    if [[ -n "${description:="$(_help_description "$file")"}" ]]; then
         printf -v help "%s\n\n%s" "${help:=}" "$description"
     fi
 
@@ -27,11 +29,36 @@ _help_print() {
     printf "%s\n" "${help:=}"
 }
 
+_help_print_subcommand () {
+
+    local help summary usage description cmds opts file
+
+    file="${SCRIPT_DIR}/${CMDS_DIR}/$1.sh"
+
+    if [[ -n "${summary:="$(_help_summary "$file")"}" ]]; then
+        printf -v help "%s" "$summary"
+    fi
+
+    if [[ -n "${usage:="$(_help_usage "$file")"}" ]]; then
+        printf -v help "%s\n\nUsage : %s" "${help:=}" "$usage"
+    fi
+
+    if [[ -n "${description:="$(_help_description "$file")"}" ]]; then
+        printf -v help "%s\n\n%s" "${help:=}" "$description"
+    fi
+
+    if [[ -n "${opts:="$(_help_options)"}" ]]; then
+        printf -v help "%s\n\nOptions :\n\n%s" "${help:=}" "$opts"
+    fi
+
+    printf "%s\n" "${help:=}"
+}
+
 _help_summary () {
     local summary
 
     # shellcheck disable=SC2154
-    if [[ -n "${summary:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "summary" | util_fmt "${TERM_WIDTH}")"}" ]]; then
+    if [[ -n "${summary:="$(_meta_get "$1" "summary" | util_fmt "${TERM_WIDTH}")"}" ]]; then
         printf "%s" "$summary"
     fi
 }
@@ -40,8 +67,10 @@ _help_usage () {
     local usage
 
     # shellcheck disable=SC2154
-    if [[ -n "${usage:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "usage")"}" ]]; then
+    if [[ -n "${usage:="$(_meta_get "$1" "usage")"}" ]]; then
         printf "%s" "$usage"
+    elif [[ -n "${CMD+x}" ]]; then
+        printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD_ARGS[0]}"
     else
         printf "%s [OPTIONS]" "$SCRIPT_FILE"
     fi
@@ -51,7 +80,7 @@ _help_description () {
     local description
 
     # shellcheck disable=SC2154
-    if [[ -n "${description:="$(_meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "description" | util_fmt "${TERM_WIDTH}")"}" ]]; then
+    if [[ -n "${description:="$(_meta_get "$1" "description" | util_fmt "${TERM_WIDTH}")"}" ]]; then
         printf "%s" "$description"
     fi
 }
