@@ -10,11 +10,11 @@
 #
 # % flag
 # desc="An option meant to be used as a flag."
-# type="flag" variable="flag" value="1" default=0
+# short=f type="flag" variable="flag" value="1" default=0
 #
 # % opt-req
 # desc="An optional option that requires a argument."
-# type="option" variable="opt_req" default="opt_default"
+# short=r type="option" variable="opt_req" default="opt_default"
 #
 # % opt-opt
 # desc="An optional option that may take a argument."

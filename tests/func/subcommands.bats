@@ -70,10 +70,10 @@ Options :
   --help | -h
           Show this help.
 
-  --flag
+  --flag | -f
           An option meant to be used as a flag.
 
-  --opt-req [OPT_REQ]
+  --opt-req | -r [OPT_REQ]
           An optional option that requires a argument.
 
   --opt-opt (OPT_OPT)

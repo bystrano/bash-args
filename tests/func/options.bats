@@ -88,3 +88,14 @@ EOF
     assert_equals "$status" 0
     assert_equals "$output" "opt-opt: test"
 }
+
+@test "$NAME expand grouped short options" {
+    run bash "$SCRIPT" -of
+    expected=$(cat << EOF
+flag: 1
+opt-req: opt_default
+opt-opt: opt_value
+EOF
+)
+    assert_equals "$output" "$expected"
+}
