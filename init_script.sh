@@ -15,6 +15,7 @@ CMDS_DIR=${CMDS_DIR:=cmd}
 read -r _ _file < <(caller)
 _file="$(readlink -f "$_file")"
 
+# shellcheck disable=2034
 SCRIPT_FILE="$(basename "$_file")"
 # shellcheck disable=2034
 SCRIPT_DIR="$(dirname "$_file")"

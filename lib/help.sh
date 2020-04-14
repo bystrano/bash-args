@@ -2,7 +2,7 @@
 set -euo pipefail
 
 _help_print_main() {
-    local help summary usage description cmds opts file
+    local help summary usage description cmds opts
 
     if [[ -n "${summary:="$(_help_summary)"}" ]]; then
         printf -v help "%s" "$summary"
@@ -29,7 +29,7 @@ _help_print_main() {
 
 _help_print_subcommand () {
 
-    local help summary usage description cmds opts file
+    local help summary usage description cmds opts
 
     if [[ -n "${summary:="$(_help_summary "$1")"}" ]]; then
         printf -v help "%s" "$summary"
@@ -51,7 +51,7 @@ _help_print_subcommand () {
 }
 
 _help_summary () {
-    local file summary
+    local summary
 
     if [[ -n "${summary:="$(_meta_get "summary" "${1:-}" | util_fmt "${TERM_WIDTH}")"}" ]]; then
         printf "%s" "$summary"
