@@ -9,6 +9,9 @@ load ../helper
     run bash "$SCRIPT" subcommand1
     expected=$(cat << EOF
 my_option: opt_default
+flag: 
+opt-req: 
+opt-opt: 
 EOF
 )
     assert_equals "$output" "$expected"
@@ -42,6 +45,9 @@ EOF
     run bash "$SCRIPT" -o test subcommand1
     expected=$(cat << EOF
 my_option: test
+flag: 
+opt-req: 
+opt-opt: 
 EOF
 )
     assert_equals "$output" "$expected"
@@ -62,6 +68,15 @@ Options :
 
   --help | -h
           Show this help.
+
+  --flag | -f
+          An option meant to be used as a flag.
+
+  --opt-req | - [OPT_REQ]
+          An optional option that requires a argument.
+
+  --opt-opt | - (OPT_OPT)
+          An optional option that may take a argument.
 
   --opt | -o [MY_OPTION]
           An option that requires a argument.

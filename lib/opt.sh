@@ -2,16 +2,28 @@
 set -euo pipefail
 
 _opt_get_all () {
-    local options
+    local file options
 
-    # shellcheck disable=SC2154
-    options="$( _meta_get "${SCRIPT_DIR}/${SCRIPT_FILE}" "options" )"
+    if [[ -n "${1+x}" ]]; then
+        file="$1"
+    else
+        file="${SCRIPT_DIR}/${SCRIPT_FILE}"
+    fi
+
+    options="$( _meta_get "$file" "options" )"
     echo "$options" | awk -v all=1 -f "${CMD_DIR:=.}"/lib/meta_get_option.awk
 }
 
 _opt_get_param () {
+    local file
 
-    _meta_get_option "${SCRIPT_DIR}/${SCRIPT_FILE}" "$1" "$2"
+    if [[ -n "${3+x}" ]]; then
+        file="$3"
+    else
+        file="${SCRIPT_DIR}/${SCRIPT_FILE}"
+    fi
+
+    _meta_get_option "$file" "$1" "$2"
 }
 
 _opt_expand_short_opts () {

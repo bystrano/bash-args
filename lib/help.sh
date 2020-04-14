@@ -22,7 +22,7 @@ _help_print_main() {
         printf -v help "%s\n\nCommands :\n\n%s" "${help:=}" "$cmds"
     fi
 
-    if [[ -n "${opts:="$(_help_options)"}" ]]; then
+    if [[ -n "${opts:="$(_help_options "$file")"}" ]]; then
         printf -v help "%s\n\nOptions :\n\n%s" "${help:=}" "$opts"
     fi
 
@@ -47,7 +47,7 @@ _help_print_subcommand () {
         printf -v help "%s\n\n%s" "${help:=}" "$description"
     fi
 
-    if [[ -n "${opts:="$(_help_options)"}" ]]; then
+    if [[ -n "${opts:="$(_help_options_subcommand "$file")"}" ]]; then
         printf -v help "%s\n\nOptions :\n\n%s" "${help:=}" "$opts"
     fi
 
@@ -123,25 +123,26 @@ _help_commands () {
 _help_options () {
     local desc_offset options usages descs usage
 
+    file="$1"
     desc_offset=10
-    options=$(_opt_get_all)
+    options=$(_opt_get_all "$file")
     usages=()
     descs=()
 
-    if ! util_in_array "help" "$options"; then
+    if ! util_in_array "help" "$options" && [[ -z "${2+x}" ]]; then
         usages+=("  --help | -h")
         descs+=("Show this help.")
     fi
 
     for option in $options; do
-        usage="$(printf "  --%s | -%s" "$option" "$(_opt_get_param "$option" "short")")"
-        if [[ -z "$(_opt_get_param "$option" "value")" ]]; then
-            usage="$usage [$(_opt_get_param "$option" "variable" | awk '{print toupper($0)}')]"
-        elif [[ "$(_opt_get_param "$option" "type")" == "option" ]]; then
-            usage="$usage ($(_opt_get_param "$option" "variable" | awk '{print toupper($0)}'))"
+        usage="$(printf "  --%s | -%s" "$option" "$(_opt_get_param "$option" "short" "$file")")"
+        if [[ -z "$(_opt_get_param "$option" "value" "$file")" ]]; then
+            usage="$usage [$(_opt_get_param "$option" "variable" "$file" | awk '{print toupper($0)}')]"
+        elif [[ "$(_opt_get_param "$option" "type" "$file")" == "option" ]]; then
+            usage="$usage ($(_opt_get_param "$option" "variable" "$file" | awk '{print toupper($0)}'))"
         fi
         usages+=("$usage")
-        descs+=("$(_opt_get_param "$option" "desc" | util_fmt $((TERM_WIDTH - desc_offset)))")
+        descs+=("$(_opt_get_param "$option" "desc" "$file" | util_fmt $((TERM_WIDTH - desc_offset)))")
     done
 
     for ((i=0; i<${#usages[@]}; i++)); do
@@ -151,4 +152,10 @@ _help_options () {
         done <<< "${descs[i]}"
         echo
     done
+}
+
+_help_options_subcommand () {
+
+    _help_options "$1"
+    _help_options "${SCRIPT_DIR}/${SCRIPT_FILE}" "hide-help"
 }
