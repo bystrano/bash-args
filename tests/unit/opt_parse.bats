@@ -47,9 +47,9 @@ EOF
 }
 
 @test "$NAME mix arguments and options" {
-    run bash "$SCRIPT_ARGS" subcommand arg1 -f bla arg2 'hello world' --second blou
+    run bash "$SCRIPT_ARGS" subcommand1 arg1 -f bla arg2 'hello world' --second blou
     expected=$(cat << EOF
-cmd: subcommand
+cmd: subcommand1
 arg1
 arg2
 hello world
@@ -57,7 +57,7 @@ EOF
             )
     assert_equals "$output" "$expected"
 
-    run bash "$SCRIPT_OPTS" subcommand arg1 -f bla arg2 'hello world' --second blou
+    run bash "$SCRIPT_OPTS" subcommand1 arg1 -f bla arg2 'hello world' --second blou
     expected=$(cat << EOF
 --first bla
 --second blou

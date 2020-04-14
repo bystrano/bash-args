@@ -31,11 +31,12 @@ _opt_expand_short_opts () {
 }
 
 _opt_get_name () {
-    local name short
+    local subcmd name short
 
-    for name in $(_meta_get_all_opts); do
+    subcmd="${2-}"
+    for name in $(_meta_get_all_opts "$subcmd"); do
 
-        short=$(_meta_get_opt "$name" "short")
+        short=$(_meta_get_opt "$name" "short" "$subcmd")
 
         if [[ "$1" == "-$short" ]] || [[ "$1" == "--$name" ]]; then
             printf "%s" "$name"
@@ -45,16 +46,18 @@ _opt_get_name () {
 }
 
 _opt_interpret () {
-    local name argument type default value variable
+    local subcmd name argument type default value variable
 
+    subcmd="$1"
+    shift
     name="${1##--}"
     shift
     argument="$*"
 
-    type=$(_meta_get_opt "$name" "type")
-    default=$(_meta_get_opt "$name" "default")
-    value=$(_meta_get_opt "$name" "value")
-    variable=$(_meta_get_opt "$name" "variable")
+    type=$(_meta_get_opt "$name" "type" "$subcmd")
+    default=$(_meta_get_opt "$name" "default" "$subcmd")
+    value=$(_meta_get_opt "$name" "value" "$subcmd")
+    variable=$(_meta_get_opt "$name" "variable" "$subcmd")
 
     if [[ "$type" == "flag" ]]; then
         export "$variable=$value"
@@ -77,11 +80,12 @@ _opt_interpret () {
 }
 
 _opt_interpret_default () {
-    local name variable default
+    local subcmd name variable default
 
-    name="$1"
-    variable=$(_meta_get_opt "$name" "variable")
-    default=$(_meta_get_opt "$name" "default")
+    subcmd="$1"
+    name="$2"
+    variable=$(_meta_get_opt "$name" "variable" "$1")
+    default=$(_meta_get_opt "$name" "default" "$1")
 
     if [[ -z "${!variable+x}" ]]; then
         if [[ -n "${default}" ]]; then
@@ -121,6 +125,14 @@ _opt_parse () {
         if [[ ! "$item" =~ ^- ]]; then
             if [[ -z ${CMD+x} ]]; then
                 CMD="$item";
+
+                if [[ "$CMD" == "_complete" ]]; then
+                    _complete
+                    exit 0
+                elif [[ "$CMD" == "_register_autocomplete" ]]; then
+                    printf "complete -C \"%s _complete\" %s\n" "$SCRIPT_FILE" "$SCRIPT_FILE"
+                    exit 0
+                fi
             else
                 CMD_ARGS+=("$item")
             fi
@@ -129,14 +141,14 @@ _opt_parse () {
             if [[ "$opt" == "-h" ]] || [[ "$opt" == "--help" ]]; then
                 opt_name="help"
             else
-                opt_name=$(_opt_get_name "$opt")
+                opt_name=$(_opt_get_name "$opt" "${CMD:-}")
             fi
 
             if [[ -z "$opt_name" ]]; then
                 out_usage_error "invalid option : $opt"
             fi
 
-            if [[ "$(_meta_get_opt "$opt_name" "type")" == "option" ]] &&
+            if [[ "$(_meta_get_opt "$opt_name" "type" "${CMD-}")" == "option" ]] &&
                    [[ -n "${_ARGS[i+1]+x}" ]] &&
                    [[ ! "${_ARGS[i+1]}" =~ ^- ]]; then
                 CMD_OPTS+=("--$opt_name ${_ARGS[i+1]}")
@@ -150,11 +162,11 @@ _opt_parse () {
     if [[ "${#CMD_OPTS[@]}" -gt 0 ]]; then
         for opt in "${CMD_OPTS[@]}"; do
             # shellcheck disable=SC2086
-            _opt_interpret $opt
+            _opt_interpret "${CMD-}" $opt
         done
     fi
 
-    for opt in $(_meta_get_all_opts); do
-        _opt_interpret_default "$opt"
+    for opt in $(_meta_get_all_opts "${CMD-}"); do
+        _opt_interpret_default "${CMD-}" "$opt"
     done
 }

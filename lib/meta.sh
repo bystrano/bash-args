@@ -16,7 +16,10 @@ _meta_get () {
         file="$3"
     fi
 
-    <"$file" awk -v meta="$meta" -f "${CMD_DIR:=.}"/lib/meta_get.awk
+    # the help subcommand may be absent.
+    if [[ "${2-}" != "help" ]] || [[ -f "$file" ]]; then
+        <"$file" awk -v meta="$meta" -f "${CMD_DIR:=.}"/lib/meta_get.awk
+    fi
 }
 
 _meta_get_all_opts () {

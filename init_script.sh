@@ -34,15 +34,3 @@ done
 ## Parse the arguments
 
 _opt_parse "$@"
-
-
-####
-## Interpret special auto-complete commands.
-
-if [[ "${CMD:=}" == "_complete" ]]; then
-    _complete
-    exit 0
-elif [[ "${CMD:=}" == "_register_autocomplete" ]]; then
-    printf "complete -C \"%s _complete\" %s\n" "$SCRIPT_FILE" "$SCRIPT_FILE"
-    exit 0
-fi

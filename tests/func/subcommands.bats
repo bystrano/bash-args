@@ -9,9 +9,9 @@ load ../helper
     run bash "$SCRIPT" subcommand1
     expected=$(cat << EOF
 my_option: opt_default
-flag: 
-opt-req: 
-opt-opt: 
+flag: 0
+opt-req: opt_default
+opt-opt: opt_default
 EOF
 )
     assert_equals "$output" "$expected"
@@ -42,12 +42,13 @@ EOF
 }
 
 @test "$NAME options' values are passed to the subcommand" {
-    run bash "$SCRIPT" -o test subcommand1
+
+    run bash "$SCRIPT" -o test subcommand1 --flag --opt-opt --opt-req opt_value
     expected=$(cat << EOF
 my_option: test
-flag: 
-opt-req: 
-opt-opt: 
+flag: 1
+opt-req: opt_value
+opt-opt: opt_value
 EOF
 )
     assert_equals "$output" "$expected"
@@ -69,13 +70,13 @@ Options :
   --help | -h
           Show this help.
 
-  --flag | -f
+  --flag
           An option meant to be used as a flag.
 
-  --opt-req | - [OPT_REQ]
+  --opt-req [OPT_REQ]
           An optional option that requires a argument.
 
-  --opt-opt | - (OPT_OPT)
+  --opt-opt (OPT_OPT)
           An optional option that may take a argument.
 
   --opt | -o [MY_OPTION]

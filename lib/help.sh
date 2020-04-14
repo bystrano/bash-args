@@ -131,7 +131,14 @@ _help_options () {
     fi
 
     for option in $options; do
-        usage="$(printf "  --%s | -%s" "$option" "$(_meta_get_opt "$option" "short" "$subcmd")")"
+        local short
+
+        short="$(_meta_get_opt "$option" "short" "$subcmd")"
+        if [[ -z "$short" ]]; then
+            usage="$(printf "  --%s" "$option")"
+        else
+            usage="$(printf "  --%s | -%s" "$option" "$short")"
+        fi
         if [[ -z "$(_meta_get_opt "$option" "value" "$subcmd")" ]]; then
             usage="$usage [$(_meta_get_opt "$option" "variable" "$subcmd" | awk '{print toupper($0)}')]"
         elif [[ "$(_meta_get_opt "$option" "type" "$subcmd")" == "option" ]]; then
