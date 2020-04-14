@@ -90,3 +90,17 @@ EOF
     run bash "$SCRIPT" subcommand1 --help
     assert_equals "$output" "$expected"
 }
+
+@test "$NAME expand short options with subcommand options too." {
+
+    skip
+    run bash "$SCRIPT" subcommand1 -fr arg1
+    expected=$(cat << EOF
+my_option: opt_default
+flag: 1
+opt-req: arg1
+opt-opt: opt_default
+EOF
+            )
+    assert_equals "$output" "$expected"
+}
