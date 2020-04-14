@@ -2,6 +2,7 @@
 .PHONY: test    # run the test suite
 .PHONY: lint    # run linter
 .PHONY: run     # run an interactive session in docker (see Dockerfile)
+.PHONY: profile # profile a run and display the result nicely
 
 BATS      := vendor/bats/bin/bats
 BATS_REPO := https://github.com/bats-core/bats-core.git
@@ -44,3 +45,8 @@ $(STATE_DIR)/lint: $(BASH_SRC) | $(STATE_DIR)
 run:
 	@docker build -t bash-args .
 	@docker run -it --rm --mount src=`pwd`,target=/bash-args,type=bind bash-args
+
+
+profile:
+	@ _PROFILE=1 tests/fixtures/subcommands.sh > /dev/null
+	@find tmp/ -type f -printf '%T@ %h/%f\n' | sort -r | head -n2 | cut -d' ' -f2 | xargs tests/show_profile.sh

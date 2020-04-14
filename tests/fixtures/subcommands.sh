@@ -10,6 +10,14 @@
 #
 set -euo pipefail
 
+if [[ "${_PROFILE:=0}" -eq 1 ]]; then
+    mkdir -p tmp
+    exec 3>&2 2> >(tee tmp/profile.$$.log |
+                       sed -u 's/^.*$/now/' |
+                       date -f - +%s.%N >tmp/profile.$$.tim)
+    set -x
+fi
+
 # shellcheck source=/dev/null
 . "$(dirname "$0")"/../../init_script.sh
 
