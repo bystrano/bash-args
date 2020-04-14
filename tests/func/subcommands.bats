@@ -68,4 +68,9 @@ Options :
 EOF
             )
     assert_equals "$output" "$expected"
+
+    run bash "$SCRIPT" -h subcommand1
+    assert_equals "$output" "$expected"
+    run bash "$SCRIPT" subcommand1 --help
+    assert_equals "$output" "$expected"
 }

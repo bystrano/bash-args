@@ -39,7 +39,7 @@ _help_print_subcommand () {
         printf -v help "%s" "$summary"
     fi
 
-    if [[ -n "${usage:="$(_help_usage "$file")"}" ]]; then
+    if [[ -n "${usage:="$(_help_usage_subcommand "$file")"}" ]]; then
         printf -v help "%s\n\nUsage : %s" "${help:=}" "$usage"
     fi
 
@@ -57,7 +57,6 @@ _help_print_subcommand () {
 _help_summary () {
     local summary
 
-    # shellcheck disable=SC2154
     if [[ -n "${summary:="$(_meta_get "$1" "summary" | util_fmt "${TERM_WIDTH}")"}" ]]; then
         printf "%s" "$summary"
     fi
@@ -66,20 +65,27 @@ _help_summary () {
 _help_usage () {
     local usage
 
-    # shellcheck disable=SC2154
     if [[ -n "${usage:="$(_meta_get "$1" "usage")"}" ]]; then
         printf "%s" "$usage"
-    elif [[ -n "${CMD+x}" ]]; then
-        printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD_ARGS[0]}"
     else
         printf "%s [OPTIONS]" "$SCRIPT_FILE"
+    fi
+}
+
+_help_usage_subcommand () {
+
+    if [[ -n "${usage:="$(_meta_get "$1" "usage")"}" ]]; then
+        printf "%s" "$usage"
+    elif [[ "${CMD}" == "help" ]]; then
+        printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD_ARGS[0]}"
+    else
+        printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD}"
     fi
 }
 
 _help_description () {
     local description
 
-    # shellcheck disable=SC2154
     if [[ -n "${description:="$(_meta_get "$1" "description" | util_fmt "${TERM_WIDTH}")"}" ]]; then
         printf "%s" "$description"
     fi
@@ -98,7 +104,6 @@ _help_commands () {
     done
 
     cmd_col_width=$((max_cmd_length + 1))
-    # shellcheck disable=SC2154
     desc_col_width=$((TERM_WIDTH - cmd_col_width - 3))
 
     for cmd in $cmds; do
