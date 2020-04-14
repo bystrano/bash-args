@@ -4,17 +4,15 @@ set -euo pipefail
 _help_print_main() {
     local help summary usage description cmds opts file
 
-    file="${SCRIPT_DIR}/${SCRIPT_FILE}"
-
-    if [[ -n "${summary:="$(_help_summary "$file")"}" ]]; then
+    if [[ -n "${summary:="$(_help_summary)"}" ]]; then
         printf -v help "%s" "$summary"
     fi
 
-    if [[ -n "${usage:="$(_help_usage "$file")"}" ]]; then
+    if [[ -n "${usage:="$(_help_usage)"}" ]]; then
         printf -v help "%s\n\nUsage : %s" "${help:=}" "$usage"
     fi
 
-    if [[ -n "${description:="$(_help_description "$file")"}" ]]; then
+    if [[ -n "${description:="$(_help_description)"}" ]]; then
         printf -v help "%s\n\n%s" "${help:=}" "$description"
     fi
 
@@ -22,7 +20,7 @@ _help_print_main() {
         printf -v help "%s\n\nCommands :\n\n%s" "${help:=}" "$cmds"
     fi
 
-    if [[ -n "${opts:="$(_help_options "$file")"}" ]]; then
+    if [[ -n "${opts:="$(_help_options)"}" ]]; then
         printf -v help "%s\n\nOptions :\n\n%s" "${help:=}" "$opts"
     fi
 
@@ -33,21 +31,19 @@ _help_print_subcommand () {
 
     local help summary usage description cmds opts file
 
-    file="${SCRIPT_DIR}/${CMDS_DIR}/$1.sh"
-
-    if [[ -n "${summary:="$(_help_summary "$file")"}" ]]; then
+    if [[ -n "${summary:="$(_help_summary "$1")"}" ]]; then
         printf -v help "%s" "$summary"
     fi
 
-    if [[ -n "${usage:="$(_help_usage_subcommand "$file")"}" ]]; then
+    if [[ -n "${usage:="$(_help_usage_subcommand "$1")"}" ]]; then
         printf -v help "%s\n\nUsage : %s" "${help:=}" "$usage"
     fi
 
-    if [[ -n "${description:="$(_help_description "$file")"}" ]]; then
+    if [[ -n "${description:="$(_help_description "$1")"}" ]]; then
         printf -v help "%s\n\n%s" "${help:=}" "$description"
     fi
 
-    if [[ -n "${opts:="$(_help_options_subcommand "$file")"}" ]]; then
+    if [[ -n "${opts:="$(_help_options_subcommand "$1")"}" ]]; then
         printf -v help "%s\n\nOptions :\n\n%s" "${help:=}" "$opts"
     fi
 
@@ -55,9 +51,9 @@ _help_print_subcommand () {
 }
 
 _help_summary () {
-    local summary
+    local file summary
 
-    if [[ -n "${summary:="$(_meta_get "$1" "summary" | util_fmt "${TERM_WIDTH}")"}" ]]; then
+    if [[ -n "${summary:="$(_meta_get "summary" "${1:-}" | util_fmt "${TERM_WIDTH}")"}" ]]; then
         printf "%s" "$summary"
     fi
 }
@@ -65,7 +61,7 @@ _help_summary () {
 _help_usage () {
     local usage
 
-    if [[ -n "${usage:="$(_meta_get "$1" "usage")"}" ]]; then
+    if [[ -n "${usage:="$(_meta_get "usage")"}" ]]; then
         printf "%s" "$usage"
     else
         printf "%s [OPTIONS]" "$SCRIPT_FILE"
@@ -74,7 +70,7 @@ _help_usage () {
 
 _help_usage_subcommand () {
 
-    if [[ -n "${usage:="$(_meta_get "$1" "usage")"}" ]]; then
+    if [[ -n "${usage:="$(_meta_get "usage" "$1")"}" ]]; then
         printf "%s" "$usage"
     elif [[ "${CMD}" == "help" ]]; then
         printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD_ARGS[0]}"
@@ -86,7 +82,7 @@ _help_usage_subcommand () {
 _help_description () {
     local description
 
-    if [[ -n "${description:="$(_meta_get "$1" "description" | util_fmt "${TERM_WIDTH}")"}" ]]; then
+    if [[ -n "${description:="$(_meta_get "description" "${1:-}" | util_fmt "${TERM_WIDTH}")"}" ]]; then
         printf "%s" "$description"
     fi
 }
@@ -116,16 +112,16 @@ _help_commands () {
                 printf "%18s%s\n" " " "$line"
             fi
             ((line_index++))
-        done <<< "$( _meta_command_get "$cmd" "summary" | util_fmt "$desc_col_width" )"
+        done <<< "$( _meta_get "summary" "$cmd" | util_fmt "$desc_col_width" )"
     done
 }
 
 _help_options () {
-    local desc_offset options usages descs usage
+    local subcmd desc_offset options usages descs usage
 
-    file="$1"
+    subcmd="${1:-}"
     desc_offset=10
-    options=$(_opt_get_all "$file")
+    options=$(_meta_get_all_opts "$subcmd")
     usages=()
     descs=()
 
@@ -135,14 +131,14 @@ _help_options () {
     fi
 
     for option in $options; do
-        usage="$(printf "  --%s | -%s" "$option" "$(_opt_get_param "$option" "short" "$file")")"
-        if [[ -z "$(_opt_get_param "$option" "value" "$file")" ]]; then
-            usage="$usage [$(_opt_get_param "$option" "variable" "$file" | awk '{print toupper($0)}')]"
-        elif [[ "$(_opt_get_param "$option" "type" "$file")" == "option" ]]; then
-            usage="$usage ($(_opt_get_param "$option" "variable" "$file" | awk '{print toupper($0)}'))"
+        usage="$(printf "  --%s | -%s" "$option" "$(_meta_get_opt "$option" "short" "$subcmd")")"
+        if [[ -z "$(_meta_get_opt "$option" "value" "$subcmd")" ]]; then
+            usage="$usage [$(_meta_get_opt "$option" "variable" "$subcmd" | awk '{print toupper($0)}')]"
+        elif [[ "$(_meta_get_opt "$option" "type" "$subcmd")" == "option" ]]; then
+            usage="$usage ($(_meta_get_opt "$option" "variable" "$subcmd" | awk '{print toupper($0)}'))"
         fi
         usages+=("$usage")
-        descs+=("$(_opt_get_param "$option" "desc" "$file" | util_fmt $((TERM_WIDTH - desc_offset)))")
+        descs+=("$(_meta_get_opt "$option" "desc" "$subcmd" | util_fmt $((TERM_WIDTH - desc_offset)))")
     done
 
     for ((i=0; i<${#usages[@]}; i++)); do
@@ -157,5 +153,4 @@ _help_options () {
 _help_options_subcommand () {
 
     _help_options "$1"
-    _help_options "${SCRIPT_DIR}/${SCRIPT_FILE}" "hide-help"
 }

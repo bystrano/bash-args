@@ -1,39 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-_opt_get_all () {
-    local file options
-
-    if [[ -n "${1+x}" ]]; then
-        file="$1"
-    else
-        file="${SCRIPT_DIR}/${SCRIPT_FILE}"
-    fi
-
-    options="$( _meta_get "$file" "options" )"
-    echo "$options" | awk -v all=1 -f "${CMD_DIR:=.}"/lib/meta_get_option.awk
-}
-
-_opt_get_param () {
-    local file
-
-    if [[ -n "${3+x}" ]]; then
-        file="$3"
-    else
-        file="${SCRIPT_DIR}/${SCRIPT_FILE}"
-    fi
-
-    _meta_get_option "$file" "$1" "$2"
-}
-
 _opt_expand_short_opts () {
     local opt item options short_options args i char
 
-    options=$(_opt_get_all)
+    options=$(_meta_get_all_opts)
     short_options=""
 
     for opt in $options; do
-        short_options="$short_options$(_opt_get_param "$opt" "short")"
+        short_options="$short_options$(_meta_get_opt "$opt" "short")"
     done
 
     if [[ "${#_ARGS[@]}" -gt 0 ]]; then
@@ -58,9 +33,9 @@ _opt_expand_short_opts () {
 _opt_get_name () {
     local name short
 
-    for name in $(_opt_get_all); do
+    for name in $(_meta_get_all_opts); do
 
-        short=$(_opt_get_param "$name" "short")
+        short=$(_meta_get_opt "$name" "short")
 
         if [[ "$1" == "-$short" ]] || [[ "$1" == "--$name" ]]; then
             printf "%s" "$name"
@@ -76,10 +51,10 @@ _opt_interpret () {
     shift
     argument="$*"
 
-    type=$(_opt_get_param "$name" "type")
-    default=$(_opt_get_param "$name" "default")
-    value=$(_opt_get_param "$name" "value")
-    variable=$(_opt_get_param "$name" "variable")
+    type=$(_meta_get_opt "$name" "type")
+    default=$(_meta_get_opt "$name" "default")
+    value=$(_meta_get_opt "$name" "value")
+    variable=$(_meta_get_opt "$name" "variable")
 
     if [[ "$type" == "flag" ]]; then
         export "$variable=$value"
@@ -99,15 +74,14 @@ _opt_interpret () {
             out_usage_error "The --$name option requires an argument."
         fi
     fi
-
 }
 
 _opt_interpret_default () {
     local name variable default
 
     name="$1"
-    variable=$(_opt_get_param "$name" "variable")
-    default=$(_opt_get_param "$name" "default")
+    variable=$(_meta_get_opt "$name" "variable")
+    default=$(_meta_get_opt "$name" "default")
 
     if [[ -z "${!variable+x}" ]]; then
         if [[ -n "${default}" ]]; then
@@ -162,7 +136,7 @@ _opt_parse () {
                 out_usage_error "invalid option : $opt"
             fi
 
-            if [[ "$(_opt_get_param "$opt_name" "type")" == "option" ]] &&
+            if [[ "$(_meta_get_opt "$opt_name" "type")" == "option" ]] &&
                    [[ -n "${_ARGS[i+1]+x}" ]] &&
                    [[ ! "${_ARGS[i+1]}" =~ ^- ]]; then
                 CMD_OPTS+=("--$opt_name ${_ARGS[i+1]}")
@@ -180,7 +154,7 @@ _opt_parse () {
         done
     fi
 
-    for opt in $(_opt_get_all); do
+    for opt in $(_meta_get_all_opts); do
         _opt_interpret_default "$opt"
     done
 }

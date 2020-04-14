@@ -14,10 +14,10 @@ _complete () {
     fi
 
     if [[ "$cur" =~ ^- ]]; then
-        options="$(_opt_get_all)"
+        options="$(_meta_get_all_opts)"
         candidates=""
         for option in $options; do
-            short="$(_opt_get_param "$option" "short")"
+            short="$(_meta_get_opt "$option" "short")"
             if [[ -z "$short" ]]; then
                 candidates="$(printf "%s %s" "$candidates" "--$option")"
             else
