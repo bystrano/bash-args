@@ -18,9 +18,9 @@ BEGIN {
         current_value = substr($0, RLENGTH + 1)
         sub(/^ +/, "", current_value)
 
-        metas[current_meta] = current_value
+        metas[current_meta] = current_value "\n"
     } else {
-        metas[current_meta] = metas[current_meta] substr($0, 2)
+        metas[current_meta] = metas[current_meta] substr($0, 2) "\n"
     }
 }
 

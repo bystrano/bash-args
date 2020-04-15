@@ -2,6 +2,11 @@
 set -euo pipefail
 
 _meta_get () {
+
+    _meta_get_raw "$1" "${2-}" "${3-}" | tr --delete '\n'
+}
+
+_meta_get_raw () {
     local file meta
 
     meta="$1"
@@ -25,13 +30,16 @@ _meta_get () {
 _meta_get_all_opts () {
     local options
 
-    if [[ -n "${1:-}" ]]; then
-        options="$( _meta_get "options" "$1" )"
-        echo "$options" | awk -v all=1 -f "${CMD_DIR:-.}"/lib/meta_get_option.awk
+    if [[ -z "${_OPTIONS+x}" ]]; then
+        if [[ -n "${1:-}" ]]; then
+            options="$( _meta_get_raw "options" "$1" )"
+        fi
+
+        options="${options:-}$( _meta_get_raw "options" )"
+        _OPTIONS="$(awk -v all=1 -f "${CMD_DIR:-.}"/lib/meta_get_option.awk <<<"$options")"
     fi
 
-    options="$( _meta_get "options" )"
-    echo "$options" | awk -v all=1 -f "${CMD_DIR:-.}"/lib/meta_get_option.awk
+    printf "%s\n" "${_OPTIONS[*]}"
 }
 
 _meta_get_opt () {
@@ -43,5 +51,5 @@ _meta_get_opt () {
     fi
 
     options="$( _meta_get "options" "" "${4-}")"
-    echo "$options" | awk -v option="$1" -v param="$2" -f "${CMD_DIR:-.}"/lib/meta_get_option.awk
+    awk -v option="$1" -v param="$2" -f "${CMD_DIR:-.}"/lib/meta_get_option.awk <<<"$options"
 }
