@@ -107,7 +107,7 @@ _help_commands () {
     for cmd in $cmds; do
         printf "  %-${cmd_col_width}s " "$cmd"
         line_index=0
-        while IFS= read -r line; do
+        while read -r line; do
             if [[ line_index -eq 0 ]]; then
                 printf "%s\n" "$line"
             else
