@@ -98,12 +98,10 @@ _opt_get_args_list () {
     done
 }
 
-_opt_parse () {
-    local opt opt_name item skip_next
+_opt_parse_args () {
+    local skip_next item opt opt_name
 
-    _opt_get_args_list "$@"
-    _opt_expand_short_opts
-
+    unset CMD
     CMD_OPTS=()
     CMD_ARGS=()
     for (( i=0; i<${#_ARGS[@]}; i++ )); do
@@ -151,6 +149,17 @@ _opt_parse () {
             fi
         fi
     done
+}
+
+_opt_process_opts () {
+    local opt
+
+    # computes the _ARGS array
+    _opt_get_args_list "$@"
+    # mutates the _ARGS array
+    _opt_expand_short_opts
+    # parse the _ARGS to compute the CMD, CMD_ARGS and CMD_OPTS arrays.
+    _opt_parse_args
 
     if [[ "${#CMD_OPTS[@]}" -gt 0 ]]; then
         for opt in "${CMD_OPTS[@]}"; do

@@ -34,4 +34,4 @@ done
 ####
 ## Parse the arguments
 
-_opt_parse "$@"
+_opt_process_opts "$@"
