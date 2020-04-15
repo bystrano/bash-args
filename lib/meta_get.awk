@@ -3,13 +3,9 @@
 
 BEGIN {
     IGNORE_CASE=1
-    stop=0
 }
 
-# stop on the first line that doesn't start with a #
-! /^#/ { stop=1 }
-
-/^# / && stop==0 {
+/^# / {
     if (match($0, /^# ([^:]+) ?:/)) {
         current_meta = substr($0, 3, RLENGTH - 3)
         sub(/ +$/, "", current_meta)
@@ -24,4 +20,8 @@ BEGIN {
     }
 }
 
-END { print metas[meta] }
+# stop on the first line that doesn't start with a #
+! /^#/ {
+    print metas[meta]
+    exit;
+}
