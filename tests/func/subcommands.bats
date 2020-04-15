@@ -93,7 +93,6 @@ EOF
 
 @test "$NAME expand short options with subcommand options too." {
 
-    skip
     run bash "$SCRIPT" subcommand1 -fr arg1
     expected=$(cat << EOF
 my_option: opt_default

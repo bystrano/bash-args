@@ -2,19 +2,12 @@
 set -euo pipefail
 
 _opt_expand_short_opts () {
-    local opt item options short_options args i char
-
-    options=$(_meta_get_all_opts)
-    short_options=""
-
-    for opt in $options; do
-        short_options="$short_options$(_meta_get_opt "$opt" "short")"
-    done
+    local opt item args i char
 
     if [[ "${#_ARGS[@]}" -gt 0 ]]; then
         args=()
         for item in "${_ARGS[@]}"; do
-            if [[ "$item" =~ ^-[${short_options}]+ ]]; then
+            if [[ "$item" =~ ^-[a-zA-Z]+ ]]; then
                 for (( i=0; i<${#item}; i++ )); do
                     char=${item:$i:1}
                     if [[ $char != '-' ]]; then
