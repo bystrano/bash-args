@@ -4,6 +4,8 @@ set -euo pipefail
 _help_print_main() {
     local help summary usage description cmds opts
 
+    _meta_get_all_opts
+
     if [[ -n "${summary:="$(_help_summary)"}" ]]; then
         printf -v help "%s" "$summary"
     fi
@@ -117,36 +119,41 @@ _help_commands () {
 }
 
 _help_options () {
-    local subcmd desc_offset options usages descs usage
+    local subcmd desc_offset usages descs usage
 
     subcmd="${1:-}"
     desc_offset=10
-    options=$(_meta_get_all_opts "$subcmd")
     usages=()
     descs=()
 
-    if ! util_in_array "help" "$options" && [[ -z "${2+x}" ]]; then
+    if [[ -z "${_OPTIONS+x}" ]]; then
+        _OPTIONS=()
+    fi
+
+    if ( [[ ${#_OPTIONS[@]} -eq 0 ]] || ! util_in_array "help" "${_OPTIONS[@]}" ) && [[ -z "${2+x}" ]]; then
         usages+=("  --help | -h")
         descs+=("Show this help.")
     fi
 
-    for option in $options; do
-        local short
+    if [[ ${#_OPTIONS[@]} -gt 0 ]]; then
+        for option in "${_OPTIONS[@]}"; do
+            local short
 
-        short="$(_meta_get_opt "$option" "short" "$subcmd")"
-        if [[ -z "$short" ]]; then
-            usage="$(printf "  --%s" "$option")"
-        else
-            usage="$(printf "  --%s | -%s" "$option" "$short")"
-        fi
-        if [[ -z "$(_meta_get_opt "$option" "value" "$subcmd")" ]]; then
-            usage="$usage [$(_meta_get_opt "$option" "variable" "$subcmd" | awk '{print toupper($0)}')]"
-        elif [[ "$(_meta_get_opt "$option" "type" "$subcmd")" == "option" ]]; then
-            usage="$usage ($(_meta_get_opt "$option" "variable" "$subcmd" | awk '{print toupper($0)}'))"
-        fi
-        usages+=("$usage")
-        descs+=("$(_meta_get_opt "$option" "desc" "$subcmd" | util_fmt $((TERM_WIDTH - desc_offset)))")
-    done
+            short="$(_meta_get_opt "$option" "short" "$subcmd")"
+            if [[ -z "$short" ]]; then
+                usage="$(printf "  --%s" "$option")"
+            else
+                usage="$(printf "  --%s | -%s" "$option" "$short")"
+            fi
+            if [[ -z "$(_meta_get_opt "$option" "value" "$subcmd")" ]]; then
+                usage="$usage [$(_meta_get_opt "$option" "variable" "$subcmd" | awk '{print toupper($0)}')]"
+            elif [[ "$(_meta_get_opt "$option" "type" "$subcmd")" == "option" ]]; then
+                usage="$usage ($(_meta_get_opt "$option" "variable" "$subcmd" | awk '{print toupper($0)}'))"
+            fi
+            usages+=("$usage")
+            descs+=("$(_meta_get_opt "$option" "desc" "$subcmd" | util_fmt $((TERM_WIDTH - desc_offset)))")
+        done
+    fi
 
     for ((i=0; i<${#usages[@]}; i++)); do
         printf "%s\n" "${usages[i]}"

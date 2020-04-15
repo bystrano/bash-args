@@ -19,6 +19,7 @@ cmds_do_subcommand () {
         if [[ ${#CMD_ARGS[@]} -eq 0 ]]; then
             _help_print_main
         else
+            _meta_get_all_opts "${CMD_ARGS[@]}"
             _help_print_subcommand "${CMD_ARGS[0]}"
         fi
     else

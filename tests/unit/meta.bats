@@ -27,15 +27,3 @@ EOF
             )
     assert_equals "$output" "$expected"
 }
-
-@test "$NAME _meta_get_opt" {
-    run bash -c ". lib/meta.sh && _meta_get_opt flag desc '' tests/fixtures/options.sh"
-    expected=$(cat << EOF
-An option meant to be used as a flag.
-EOF
-            )
-    assert_equals "$output" "$expected"
-
-    run bash -c ". lib/meta.sh && _meta_get_opt flag invalid '' tests/fixtures/options.sh"
-    assert_equals "$output" ""
-}

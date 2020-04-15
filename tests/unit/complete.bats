@@ -46,7 +46,9 @@ EOF
     export COMP_LINE="subcommands.sh subcommand1 -"
     run ${SCRIPT_SUBCMD} _complete
     expected=$(cat << EOF
+-f
 --flag
+-r
 --opt-req
 --opt-opt
 -o

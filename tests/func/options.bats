@@ -18,7 +18,8 @@ EOF
 
 @test "$NAME do help" {
     run bash "$SCRIPT" --help
-    expected=$(cat << EOF
+    . lib/util.sh
+    expected=$(util_fmt 80 << EOF
 A simple script that takes some options but no subcommands.
 
 Usage : options.sh [OPTIONS]
@@ -35,7 +36,8 @@ Options :
           An optional option that requires a argument.
 
   --opt-opt | -o (OPT_OPT)
-          An optional option that may take a argument.
+          An optional option that may take a argument. And has a nasty % 
+          character in its description.
 EOF
             )
     assert_equals "$output" "$expected"

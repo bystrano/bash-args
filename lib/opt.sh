@@ -27,7 +27,7 @@ _opt_get_name () {
     local subcmd name short
 
     subcmd="${2-}"
-    for name in $(_meta_get_all_opts "$subcmd"); do
+    for name in "${_OPTIONS[@]}"; do
 
         short=$(_meta_get_opt "$name" "short" "$subcmd")
 
@@ -123,6 +123,9 @@ _opt_parse_args () {
                 elif [[ "$CMD" == "_register_autocomplete" ]]; then
                     printf "complete -C \"%s _complete\" %s\n" "$SCRIPT_FILE" "$SCRIPT_FILE"
                     exit 0
+                else
+                    # now that we know the command, we add its option definitions.
+                    _meta_get_all_opts "$CMD"
                 fi
             else
                 CMD_ARGS+=("$item")
@@ -154,6 +157,9 @@ _opt_parse_args () {
 _opt_process_opts () {
     local opt
 
+    # Parse the options metadata of the main script to compute _OPTIONS and _OPTIONS_DEFS
+    _meta_get_all_opts
+
     # computes the _ARGS array
     _opt_get_args_list "$@"
     # mutates the _ARGS array
@@ -168,7 +174,11 @@ _opt_process_opts () {
         done
     fi
 
-    for opt in $(_meta_get_all_opts "${CMD-}"); do
-        _opt_interpret_default "${CMD-}" "$opt"
-    done
+    if [[ ${#_OPTIONS[@]} -gt 0 ]]; then
+        for opt in "${_OPTIONS[@]}"; do
+            if [[ -n "$opt" ]]; then
+                _opt_interpret_default "${CMD-}" "$opt"
+            fi
+        done
+    fi
 }

@@ -3,7 +3,7 @@ set -euo pipefail
 
 _meta_get () {
 
-    _meta_get_raw "$1" "${2-}" "${3-}" | tr --delete '\n'
+    _meta_get_raw "$1" "${2-}" "${3-}" | tr -d '\n'
 }
 
 _meta_get_raw () {
@@ -28,28 +28,49 @@ _meta_get_raw () {
 }
 
 _meta_get_all_opts () {
-    local options
+    local options opt def
 
-    if [[ -z "${_OPTIONS+x}" ]]; then
-        if [[ -n "${1:-}" ]]; then
-            options="$( _meta_get_raw "options" "$1" )"
-        fi
-
-        options="${options:-}$( _meta_get_raw "options" )"
-        _OPTIONS="$(awk -v all=1 -f "${CMD_DIR:-.}"/lib/meta_get_option.awk <<<"$options")"
+    if [[ -n "${1:-}" ]]; then
+        options="$( _meta_get_raw "options" "$1" )"
     fi
 
-    printf "%s\n" "${_OPTIONS[*]}"
+    _OPTIONS=()
+    _OPTIONS_DEFS=()
+
+    def=""
+    options="${options:-}$( _meta_get_raw "options" )"
+    while read -r line; do
+        if [[ "$line" =~ ^% ]]; then
+            opt="${line:2}"
+
+            if [[ -n "$def" ]]; then
+                _OPTIONS_DEFS+=("$def")
+                def=""
+            fi
+
+            # if [[ ${#_OPTIONS[@]} -gt 0 ]] && util_in_array "$opt" "${_OPTIONS[@]}"; then
+            #     out_fatal_error "duplicate options definition : $opt"
+            # fi
+
+            _OPTIONS+=("$opt")
+        elif [[ -n "$line" ]]; then
+            def="$def $line"
+        fi
+    done <<< "$options"
+    _OPTIONS_DEFS+=("$def")
 }
 
 _meta_get_opt () {
-    local options
+    local i name
 
-    if [[ -n "${3:-}" ]]; then
-        options="$( _meta_get "options" "${3:-}" "${4:-}")" # the last argument is for tests
-        echo "$options" | awk -v option="$1" -v param="$2" -f "${CMD_DIR:-.}"/lib/meta_get_option.awk
-    fi
-
-    options="$( _meta_get "options" "" "${4-}")"
-    awk -v option="$1" -v param="$2" -f "${CMD_DIR:-.}"/lib/meta_get_option.awk <<<"$options"
+    name="$2"
+    for (( i=0; i<${#_OPTIONS[@]}; i++ )); do
+        if [[ "${_OPTIONS[$i]}" == "$1" ]]; then
+            if [[ -n "${!name+x}" ]]; then
+                unset "$name"
+            fi
+            eval "${_OPTIONS_DEFS[$i]} && printf \"%s\" \"\${${name}-}\""
+            return
+        fi
+    done
 }
