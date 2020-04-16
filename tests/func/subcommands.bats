@@ -26,6 +26,7 @@ Usage : subcommands.sh [OPTIONS]
 
 Commands :
 
+  help         Show help about subcommands.
   subcommand1  A subcommand that prints its options.
   subcommand2  A subcommand that does nothing.
 

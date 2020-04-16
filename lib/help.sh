@@ -94,6 +94,11 @@ _help_commands () {
 
     cmds=$(_cmds_get_commands)
 
+    # if there's only the help command, don't show it.
+    if [[ "$cmds" == "help " ]]; then
+        return
+    fi
+
     max_cmd_length=0
     for cmd in $cmds; do
         if [[ ${#cmd} -gt $max_cmd_length ]]; then
@@ -130,14 +135,15 @@ _help_options () {
         _OPTIONS=()
     fi
 
-    if ( [[ ${#_OPTIONS[@]} -eq 0 ]] || ! util_in_array "help" "${_OPTIONS[@]}" ) && [[ -z "${2+x}" ]]; then
-        usages+=("  --help | -h")
-        descs+=("Show this help.")
-    fi
-
     if [[ ${#_OPTIONS[@]} -gt 0 ]]; then
         for option in "${_OPTIONS[@]}"; do
             local short
+
+            if [[ "$option" == "help" ]] && [[ -z "$(_meta_get_opt "$option" "variable")" ]]; then
+                usages+=("  --help | -h")
+                descs+=("Show this help.")
+                continue
+            fi
 
             short="$(_meta_get_opt "$option" "short" "$subcmd")"
             if [[ -z "$short" ]]; then

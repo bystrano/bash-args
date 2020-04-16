@@ -2,11 +2,17 @@
 set -euo pipefail
 
 _cmds_get_commands () {
+    local file cmd
 
+    printf 'help '
     if [[ -d "${SCRIPT_DIR}/${CMDS_DIR}" ]]; then
-        find "${SCRIPT_DIR}/${CMDS_DIR}/" -type f -name '*.sh' -print | sort \
-            | sed 's#.*/\([^/]*\)\.sh#\1#' \
-            | xargs printf '%s '
+        for file in "$SCRIPT_DIR"/"$CMDS_DIR"/*.sh; do
+            file=$(basename "$file")
+            cmd="${file:0:${#file}-3}"
+            if [[ "$cmd" != "help" ]]; then
+                printf '%s ' "$cmd"
+            fi
+        done
     fi
 }
 

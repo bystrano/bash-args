@@ -10,6 +10,7 @@ load ../helper
     export COMP_LINE="subcommand.sh "
     run ${SCRIPT_SUBCMD} _complete
     expected=$(cat << EOF
+help
 subcommand1
 subcommand2
 EOF
@@ -21,6 +22,8 @@ EOF
     export COMP_LINE="options.sh -"
     run ${SCRIPT_OPTIONS} _complete
     expected=$(cat << EOF
+-h
+--help
 -f
 --flag
 -O
@@ -37,6 +40,8 @@ EOF
     export COMP_LINE="subcommands.sh -"
     run ${SCRIPT_SUBCMD} _complete
     expected=$(cat << EOF
+-h
+--help
 -o
 --opt
 EOF
@@ -46,6 +51,8 @@ EOF
     export COMP_LINE="subcommands.sh subcommand1 -"
     run ${SCRIPT_SUBCMD} _complete
     expected=$(cat << EOF
+-h
+--help
 -f
 --flag
 -r

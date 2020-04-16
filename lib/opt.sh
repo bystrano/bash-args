@@ -80,6 +80,10 @@ _opt_interpret_default () {
     variable=$(_meta_get_opt "$name" "variable" "$1")
     default=$(_meta_get_opt "$name" "default" "$1")
 
+    if [[ -z "$variable" ]] && [[ "$name" == "help" ]]; then
+        return
+    fi
+
     if [[ -z "${!variable+x}" ]]; then
         if [[ -n "${default}" ]]; then
             export "$variable=$default"
@@ -132,11 +136,7 @@ _opt_parse_args () {
             fi
         else
             opt="$item"
-            if [[ "$opt" == "-h" ]] || [[ "$opt" == "--help" ]]; then
-                opt_name="help"
-            else
-                opt_name=$(_opt_get_name "$opt" "${CMD:-}")
-            fi
+            opt_name=$(_opt_get_name "$opt" "${CMD:-}")
 
             if [[ -z "$opt_name" ]]; then
                 out_usage_error "invalid option : $opt"

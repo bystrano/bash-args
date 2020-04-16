@@ -24,6 +24,8 @@ _meta_get_raw () {
     # the help and _complete subcommand may be absent.
     if [[ -f "$file" ]] || [[ "${2-}" != "help" ]] && [[ "${2-}" != "_complete" ]]; then
         <"$file" awk -v meta="$meta" -f "${CMD_DIR:=.}"/lib/meta_get.awk
+    elif [[ "${2-}" == "help" ]] && [[ "$meta" == "summary" ]]; then
+        echo "Show help about subcommands."
     fi
 }
 
@@ -34,8 +36,8 @@ _meta_get_all_opts () {
         options="$( _meta_get_raw "options" "$1" )"
     fi
 
-    _OPTIONS=()
-    _OPTIONS_DEFS=()
+    _OPTIONS=("help")
+    _OPTIONS_DEFS=("short=h")
 
     def=""
     options="${options:-}$( _meta_get_raw "options" )"
@@ -51,6 +53,12 @@ _meta_get_all_opts () {
             # if [[ ${#_OPTIONS[@]} -gt 0 ]] && util_in_array "$opt" "${_OPTIONS[@]}"; then
             #     out_fatal_error "duplicate options definition : $opt"
             # fi
+
+            # if a help option is defined, we remove the default one.
+            if [[ "$opt" == "help " ]]; then
+                unset "_OPTIONS[0]"
+                unset "_OPTIONS_DEFS[0]"
+            fi
 
             _OPTIONS+=("$opt")
         elif [[ -n "$line" ]]; then
