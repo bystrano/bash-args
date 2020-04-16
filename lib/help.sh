@@ -2,88 +2,55 @@
 set -euo pipefail
 
 _help_print_main() {
-    local help summary usage description cmds opts
 
-    if [[ -n "${summary:="$(_help_summary)"}" ]]; then
-        printf -v help "%s" "$summary"
-    fi
-
-    if [[ -n "${usage:="$(_help_usage)"}" ]]; then
-        printf -v help "%s\n\nUsage : %s" "${help:=}" "$usage"
-    fi
-
-    if [[ -n "${description:="$(_help_description)"}" ]]; then
-        printf -v help "%s\n\n%s" "${help:=}" "$description"
-    fi
-
-    if [[ -n "${cmds:="$(_help_commands)"}" ]]; then
-        printf -v help "%s\n\nCommands :\n\n%s" "${help:=}" "$cmds"
-    fi
-
-    if [[ -n "${opts:="$(_help_options)"}" ]]; then
-        printf -v help "%s\n\nOptions :\n\n%s" "${help:=}" "$opts"
-    fi
-
-    printf "%s\n" "${help:=}"
+    _help_summary
+    _help_usage
+    _help_description
+    _help_commands
+    _help_options
 }
 
 _help_print_subcommand () {
 
-    local help summary usage description cmds opts
-
-    if [[ -n "${summary:="$(_help_summary "$1")"}" ]]; then
-        printf -v help "%s" "$summary"
-    fi
-
-    if [[ -n "${usage:="$(_help_usage_subcommand "$1")"}" ]]; then
-        printf -v help "%s\n\nUsage : %s" "${help:=}" "$usage"
-    fi
-
-    if [[ -n "${description:="$(_help_description "$1")"}" ]]; then
-        printf -v help "%s\n\n%s" "${help:=}" "$description"
-    fi
-
-    if [[ -n "${opts:="$(_help_options_subcommand "$1")"}" ]]; then
-        printf -v help "%s\n\nOptions :\n\n%s" "${help:=}" "$opts"
-    fi
-
-    printf "%s\n" "${help:=}"
+    _help_summary "$1"
+    _help_usage "$1"
+    _help_description "$1"
+    _help_options "$1"
 }
 
 _help_summary () {
-    local summary
 
-    if [[ -n "${summary:="$(_meta_get "summary" "${1:-}" | util_fmt "${TERM_WIDTH}")"}" ]]; then
-        printf "%s" "$summary"
-    fi
+    _meta_get "summary" "${1-}" | util_fmt "$TERM_WIDTH"
 }
 
 _help_usage () {
     local usage
 
-    if [[ -n "${usage:="$(_meta_get "usage")"}" ]]; then
-        printf "%s" "$usage"
-    else
-        printf "%s [OPTIONS]" "$SCRIPT_FILE"
-    fi
-}
+    printf '\n\nUsage : '
 
-_help_usage_subcommand () {
-
-    if [[ -n "${usage:="$(_meta_get "usage" "$1")"}" ]]; then
-        printf "%s" "$usage"
-    elif [[ "${CMD}" == "help" ]]; then
-        printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD_ARGS[0]}"
+    if [[ -z "${1-}" ]]; then
+        if [[ -n "${usage:="$(_meta_get "usage")"}" ]]; then
+            printf '%s' "$usage"
+        else
+            printf '%s [OPTIONS]' "$SCRIPT_FILE"
+        fi
     else
-        printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD}"
+        if [[ -n "${usage:="$(_meta_get "usage" "$1")"}" ]]; then
+            printf "%s" "$usage"
+        elif [[ "${CMD}" == "help" ]]; then
+            printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD_ARGS[0]}"
+        else
+            printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD}"
+        fi
     fi
 }
 
 _help_description () {
     local description
 
-    if [[ -n "${description:="$(_meta_get "description" "${1:-}" | util_fmt "${TERM_WIDTH}")"}" ]]; then
-        printf "%s" "$description"
+    if [[ -n "${description:="$(_meta_get "description" "${1:-}")"}" ]]; then
+        printf '\n\n'
+        printf "%s" "$description" | util_fmt "$TERM_WIDTH"
     fi
 }
 
@@ -107,22 +74,24 @@ _help_commands () {
     cmd_col_width=$((max_cmd_length + 1))
     desc_col_width=$((TERM_WIDTH - cmd_col_width - 3))
 
+    printf '\n\nCommands :\n'
+
     for cmd in $cmds; do
-        printf "  %-${cmd_col_width}s " "$cmd"
+        printf "\n  %-${cmd_col_width}s " "$cmd"
         line_index=0
         while read -r line; do
             if [[ line_index -eq 0 ]]; then
-                printf "%s\n" "$line"
+                printf "%s" "$line"
             else
-                printf "%$((cmd_col_width + 3))s%s\n" " " "$line"
+                printf "\n%$((cmd_col_width + 3))s%s" " " "$line"
             fi
-            ((line_index++))
+            line_index=$((line_index + 1))
         done <<< "$( _meta_get "summary" "$cmd" | util_fmt "$desc_col_width" )"
     done
 }
 
 _help_options () {
-    local subcmd desc_offset usages descs usage
+    local desc_offset descs short subcmd type usage usages value variable
 
     subcmd="${1:-}"
     desc_offset=10
@@ -135,40 +104,44 @@ _help_options () {
 
     if [[ ${#_OPTIONS[@]} -gt 0 ]]; then
         for option in "${_OPTIONS[@]}"; do
-            local short
 
-            if [[ "$option" == "help" ]] && [[ -z "$(_meta_get_opt "$option" "variable")" ]]; then
+            short="$(_meta_get_opt "$option" "short" "$subcmd")"
+            variable="$(_meta_get_opt "$option" "variable" "$subcmd")"
+            value="$(_meta_get_opt "$option" "value" "$subcmd")"
+            type=$(_meta_get_opt "$option" "type" "$subcmd")
+
+            if [[ "$option" == "help" ]] && [[ -z "$variable" ]]; then
                 usages+=("  --help | -h")
                 descs+=("Show this help.")
                 continue
             fi
 
-            short="$(_meta_get_opt "$option" "short" "$subcmd")"
             if [[ -z "$short" ]]; then
-                usage="$(printf "  --%s" "$option")"
+                usage="  --$option"
             else
-                usage="$(printf "  --%s | -%s" "$option" "$short")"
+                usage="  --$option | -$short"
             fi
-            if [[ -z "$(_meta_get_opt "$option" "value" "$subcmd")" ]]; then
-                usage="$usage [$(_meta_get_opt "$option" "variable" "$subcmd" | awk '{print toupper($0)}')]"
-            elif [[ "$(_meta_get_opt "$option" "type" "$subcmd")" == "option" ]]; then
-                usage="$usage ($(_meta_get_opt "$option" "variable" "$subcmd" | awk '{print toupper($0)}'))"
+
+            if [[ -z "$value" ]]; then
+                usage="$usage [$(echo "$variable" | tr '[:lower:]' '[:upper:]')]"
+            elif [[ "$type" == "option" ]]; then
+                usage="$usage ($(echo "$variable" | tr '[:lower:]' '[:upper:]'))"
             fi
+
             usages+=("$usage")
             descs+=("$(_meta_get_opt "$option" "desc" "$subcmd" | util_fmt $((TERM_WIDTH - desc_offset)))")
         done
     fi
 
+    if [[ "${#usages[@]}" -gt 0 ]]; then
+        printf '\n\nOptions :\n'
+    fi
+
     for ((i=0; i<${#usages[@]}; i++)); do
-        printf "%s\n" "${usages[i]}"
-        while IFS= read -r line; do
-            printf "%${desc_offset}s%s\n" " " "${line}"
+        printf "\n%s" "${usages[i]}"
+        while read -r line; do
+            printf "\n%${desc_offset}s%s" " " "${line}"
         done <<< "${descs[i]}"
         echo
     done
-}
-
-_help_options_subcommand () {
-
-    _help_options "$1"
 }

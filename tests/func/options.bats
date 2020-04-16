@@ -35,7 +35,7 @@ Options :
           An optional option that requires a argument.
 
   --opt-opt | -o (OPT_OPT)
-          An optional option that may take a argument. And has a nasty % 
+          An optional option that may take a argument. And has a nasty %
           character in its description.
 EOF
             )
