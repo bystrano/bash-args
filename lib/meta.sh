@@ -50,9 +50,9 @@ _meta_read_options_defs () {
                 def=""
             fi
 
-            # if [[ ${#_OPTIONS[@]} -gt 0 ]] && util_in_array "$opt" "${_OPTIONS[@]}"; then
-            #     out_fatal_error "duplicate options definition : $opt"
-            # fi
+            if [[ ${#_OPTIONS[@]} -gt 0 ]] && util_in_array "$opt" "${_OPTIONS[@]}"; then
+                out_fatal_error "duplicate option definitions : $opt"
+            fi
 
             # if a help option is defined, we remove the default one.
             if [[ "$opt" == "help " ]]; then
