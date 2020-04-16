@@ -4,8 +4,6 @@ set -euo pipefail
 _help_print_main() {
     local help summary usage description cmds opts
 
-    _meta_get_all_opts
-
     if [[ -n "${summary:="$(_help_summary)"}" ]]; then
         printf -v help "%s" "$summary"
     fi

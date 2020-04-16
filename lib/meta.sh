@@ -29,7 +29,7 @@ _meta_get_raw () {
     fi
 }
 
-_meta_get_all_opts () {
+_meta_read_options_defs () {
     local options opt def
 
     if [[ -n "${1:-}" ]]; then
