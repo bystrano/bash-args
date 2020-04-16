@@ -8,7 +8,7 @@ load ../helper
 @test "$NAME invalid subcommand ok when not used" {
     run bash "$SCRIPT" --help
     expected=$(cat << EOF
-A simple script that takes an option, and a subcommand that has a duplicate
+A simple script that takes an option, and a subcommand that has a duplicate 
 option.
 
 Usage : invalid_subcommand.sh [OPTIONS]
@@ -17,7 +17,7 @@ Commands :
 
   help  Show help about subcommands.
   cmd   A subcommand that has a option already defined in the main script,
-                  which is invalid.
+        which is invalid.
 
 Options :
 

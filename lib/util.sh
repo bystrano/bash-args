@@ -17,11 +17,7 @@ util_in_array () {
 
 util_fmt () {
 
-    if [[ -x "$(command -v fmt)" ]]; then
-        fmt --width="$1"
-    else
-        fold -s -w "$1"
-    fi
+    fold -s -w "$1"
 }
 
 util_print_trace () {

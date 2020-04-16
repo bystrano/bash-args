@@ -18,8 +18,7 @@ EOF
 
 @test "$NAME do help" {
     run bash "$SCRIPT" --help
-    . lib/util.sh
-    expected=$(util_fmt 80 << EOF
+    expected=$(cat << EOF
 A simple script that takes some options but no subcommands.
 
 Usage : options.sh [OPTIONS]

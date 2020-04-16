@@ -58,13 +58,14 @@ EOF
 @test "$NAME subcommand help" {
 
     run bash "$SCRIPT" help subcommand1
-    . lib/util.sh
-    expected=$(util_fmt 80 << EOF
+    expected=$(cat << EOF
 A subcommand that prints its options.
 
 Usage : subcommands.sh subcommand1 [OPTIONS]
 
-If there was something to say about this subcommand, this would be a great place. You could go on and on in a long description of the use cases and show how to achieve great things by typing commands in a terminal.
+If there was something to say about this subcommand, this would be a great 
+place. You could go on and on in a long description of the use cases and show 
+how to achieve great things by typing commands in a terminal.
 
 Options :
 
