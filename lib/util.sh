@@ -33,7 +33,7 @@ util_print_trace () {
     exit 1
 }
 
-util_dbg_print () {
+util_dbg () {
 
     printf "in %s : %s\n" "${FUNCNAME[1]}" "$1" >&2
 }
