@@ -13,6 +13,7 @@ load ../helper
 help
 subcommand1
 subcommand2
+zubcommand-dash
 EOF
             )
     assert_equals "$output" "$expected"

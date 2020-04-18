@@ -22,6 +22,10 @@ BEGIN {
 
 # stop on the first line that doesn't start with a #
 ! /^#/ {
+
+    # replace dashes in the cmd name
+    gsub(/-/, "_", cmd)
+
     printf("export _METAS_%s_ok=1\n", cmd)
     for (var in metas) {
         value = metas[var]

@@ -12,7 +12,7 @@ _meta_get_raw () {
     meta="$1"
     cmd="${2-}"
 
-    meta_var="_METAS_${cmd}_${meta}"
+    meta_var="_METAS_${cmd//-/_}_${meta}"
     if [[ -n "${!meta_var+x}" ]]; then
         printf "%s" "${!meta_var}"
     elif [[ "${2-}" == "help" ]] && [[ "$meta" == "summary" ]]; then
