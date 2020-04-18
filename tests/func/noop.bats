@@ -17,8 +17,8 @@ A simple script that takes no options nor subcommands.
 
 Usage : noop.sh [OPTIONS]
 
-This is a long description of the commands. This is not necessary here because 
-this command is so simple, but we need an example.
+This is a 'long' description of the commands. This is not "necessary" here 
+because this command is so simple, but we need an example.
 
 Options :
 
@@ -36,8 +36,8 @@ A simple script that takes no options nor subcommands.
 
 Usage : noop.sh [OPTIONS]
 
-This is a long description of the commands. This is not necessary here because 
-this command is so simple, but we need an example.
+This is a 'long' description of the commands. This is not "necessary" here 
+because this command is so simple, but we need an example.
 
 Options :
 

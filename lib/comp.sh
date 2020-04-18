@@ -21,7 +21,7 @@ _complete () {
     _opt_parse_args
 
     if [[ "$cur" =~ ^- ]]; then
-        _meta_read_options_defs "${CMD:-}"
+        _meta_parse_options "${CMD:-}"
         candidates=""
         for option in "${_OPTIONS[@]}"; do
             short="$(_meta_get_opt "$option" "short")"

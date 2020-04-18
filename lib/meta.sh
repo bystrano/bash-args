@@ -3,33 +3,38 @@ set -euo pipefail
 
 _meta_get () {
 
-    _meta_get_raw "$1" "${2-}" "${3-}" | tr -d '\n'
+    _meta_get_raw "$1" "${2-}" | tr -d '\n'
 }
 
 _meta_get_raw () {
-    local file meta
+    local meta cmd meta_var
 
     meta="$1"
-    if [[ -z "${2-}" ]]; then
-        file="${SCRIPT_DIR:=.}/${SCRIPT_FILE:=}"
-    else
-        file="${SCRIPT_DIR:=.}/${CMDS_DIR:=cmd}/$2.sh"
-    fi
+    cmd="${2-}"
 
-    # for tests
-    if [[ -n "${3-}" ]]; then
-        file="$3"
-    fi
-
-    # the help and _complete subcommand may be absent.
-    if [[ -f "$file" ]] || [[ "${2-}" != "help" ]] && [[ "${2-}" != "_complete" ]]; then
-        <"$file" awk -v meta="$meta" -f "${CMD_DIR:=.}"/lib/meta_get.awk
+    meta_var="_METAS_${cmd}_${meta}"
+    if [[ -n "${!meta_var+x}" ]]; then
+        printf "%s" "${!meta_var}"
     elif [[ "${2-}" == "help" ]] && [[ "$meta" == "summary" ]]; then
         echo "Show help about subcommands."
     fi
 }
 
-_meta_read_options_defs () {
+_meta_read_files () {
+    local cmd file
+
+    eval "$(<"${SCRIPT_DIR}/${SCRIPT_FILE}" awk -v cmd="" -f "${CMD_DIR}"/lib/meta_get.awk)"
+
+    if [[ -d "${SCRIPT_DIR}/${CMDS_DIR}" ]]; then
+        for file in "${SCRIPT_DIR}/${CMDS_DIR}"/*.sh; do
+            cmd="$(basename "$file")"
+            cmd="${cmd:0:$((${#cmd}-3))}"
+            eval "$(<"$file" awk -v cmd="$cmd" -f "${CMD_DIR}"/lib/meta_get.awk)"
+        done
+    fi
+}
+
+_meta_parse_options () {
     local options opt def
 
     if [[ -n "${1:-}" ]]; then
@@ -40,7 +45,7 @@ _meta_read_options_defs () {
     _OPTIONS_DEFS=("short=h")
 
     def=""
-    options="${options:-}$( _meta_get_raw "options" )"
+    options="$(printf '%s\n%s' "${options-}" "$(_meta_get_raw "options")")"
     while read -r line; do
         if [[ "$line" =~ ^% ]]; then
             opt="${line:2}"

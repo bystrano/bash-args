@@ -129,7 +129,7 @@ _opt_parse_args () {
                     exit 0
                 else
                     # now that we know the command, we add its option definitions.
-                    _meta_read_options_defs "$CMD"
+                    _meta_parse_options "$CMD"
                 fi
             else
                 CMD_ARGS+=("$item")
@@ -157,8 +157,8 @@ _opt_parse_args () {
 _opt_process_opts () {
     local opt
 
-    # Parse the options metadata of the main script to compute _OPTIONS and _OPTIONS_DEFS
-    _meta_read_options_defs
+    _meta_read_files
+    _meta_parse_options
 
     # computes the _ARGS array
     _opt_get_args_list "$@"

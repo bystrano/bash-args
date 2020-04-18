@@ -20,7 +20,7 @@ util_fmt () {
     fold -s -w "$1"
 }
 
-util_print_trace () {
+util_trace () {
     local i
 
     i=0

@@ -3,7 +3,7 @@ set -euo pipefail
 
 if [[ "${_DEBUG:=0}" -eq 1 ]]; then
     set -E
-    trap util_print_trace ERR
+    trap util_trace ERR
 fi
 
 

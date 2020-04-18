@@ -22,6 +22,19 @@ BEGIN {
 
 # stop on the first line that doesn't start with a #
 ! /^#/ {
-    print metas[meta]
+    printf("export _METAS_%s_ok=1\n", cmd)
+    for (var in metas) {
+        value = metas[var]
+        # trim the value
+        sub(/^[ \t\n]+/, "", value)
+        sub(/[ \t\n]+$/, "", value)
+
+        # escape the simple quotes
+        gsub(/'/, "\\'", value)
+
+        # print the code the export a variable and assign it the value.
+        printf("export _METAS_%s_%s=$'%s'\n", cmd, var, value)
+    }
+
     exit;
 }
