@@ -18,7 +18,9 @@ _complete () {
     _opt_get_args_list $COMP_LINE
 
     unset "_ARGS[0]"
-    unset "_ARGS[$cur_index]"
+    if [[ -n "$cur" ]]; then
+        unset "_ARGS[$cur_index]"
+    fi
 
     _opt_expand_short_opts
     _opt_parse_args
@@ -36,7 +38,17 @@ _complete () {
         done
         compgen -W "$candidates" -- "${cur}"
     else
-        compgen -W "$(_cmds_get_commands)" -- "${cur}"
+        COMP_REPLIES=()
+
+        if [[ -z "${CMD-}" ]]; then
+            for cmd in $(_cmds_get_commands); do
+                COMP_REPLIES+=("$cmd")
+            done
+        fi
+
+        if [[ ${#COMP_REPLIES[@]} -gt 0 ]]; then
+            compgen -W "${COMP_REPLIES[*]}" -- "${cur}"
+        fi
     fi
 
     exit 0;

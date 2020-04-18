@@ -86,6 +86,14 @@ EOF
     assert_equals "$output" "$expected"
 }
 
+@test "$NAME don't suggest subcommands when there is already one specified." {
+
+    export COMP_LINE="subcommands.sh subcommand1 "
+    export COMP_POINT=27
+    run $SCRIPT_SUBCMD _complete
+    assert_equals "$output" ""
+}
+
 @test "$NAME _register_autocomplete" {
 
     run ${SCRIPT_SUBCMD} _register_autocomplete
