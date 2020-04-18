@@ -2,7 +2,7 @@
 set -euo pipefail
 
 _complete () {
-    local candidates cur cur_index option
+    local candidates cur cur_index option prev
 
     # shellcheck disable=2086
     _opt_get_args_list ${COMP_LINE:0:$COMP_POINT+1}
@@ -10,8 +10,14 @@ _complete () {
     cur_index=$((${#_ARGS[@]} - 1))
     if [[ "${COMP_LINE:(COMP_POINT-1):1}" == " " ]]; then
         cur=''
+        if [[ $cur_index -gt 0 ]]; then
+            prev="${_ARGS[$cur_index]}"
+        fi
     else
         cur="${_ARGS[$cur_index]}"
+        if [[ $cur_index -gt 0 ]]; then
+            prev="${_ARGS[$cur_index-1]}"
+        fi
     fi
 
     # shellcheck disable=2086
@@ -44,6 +50,13 @@ _complete () {
             for cmd in $(_cmds_get_commands); do
                 COMP_REPLIES+=("$cmd")
             done
+        fi
+
+        if [[ "${prev-}" =~ ^--(.*)$ ]]; then
+            option="${BASH_REMATCH[1]}"
+            if [[ $(type -t "_complete_$option") == "function" ]]; then
+                eval "_complete_$option \"$cur\""
+            fi
         fi
 
         if [[ ${#COMP_REPLIES[@]} -gt 0 ]]; then

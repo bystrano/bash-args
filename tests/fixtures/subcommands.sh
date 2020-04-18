@@ -18,6 +18,14 @@ if [[ "${_PROFILE:=0}" -eq 1 ]]; then
     set -x
 fi
 
+# a auto-complete function for the opt option
+_complete_opt () {
+
+    COMP_REPLIES+=("one")
+    COMP_REPLIES+=("two")
+    COMP_REPLIES+=("three")
+}
+
 # shellcheck source=/dev/null
 . "$(dirname "$0")"/../../init_script.sh
 

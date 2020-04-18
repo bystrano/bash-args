@@ -94,6 +94,24 @@ EOF
     assert_equals "$output" ""
 }
 
+@test "$NAME auto-complete on option arguments - defined by a custom function" {
+    export COMP_LINE="subcommands.sh --opt "
+    export COMP_POINT=21
+    run $SCRIPT_SUBCMD _complete
+    expected=$(cat << EOF
+help
+subcommand1
+subcommand2
+zubcommand-dash
+one
+two
+three
+EOF
+            )
+    assert_equals "$output" "$expected"
+
+}
+
 @test "$NAME _register_autocomplete" {
 
     run ${SCRIPT_SUBCMD} _register_autocomplete
