@@ -65,3 +65,9 @@ EOF
             )
     assert_equals "$output" "$expected"
 }
+
+@test "$NAME _register_autocomplete" {
+
+    run ${SCRIPT_SUBCMD} _register_autocomplete
+    assert_equals "$output" 'complete -C "subcommands.sh _complete" subcommands.sh'
+}
