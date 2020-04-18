@@ -51,6 +51,7 @@ _meta_parse_options () {
             opt="${line:2}"
 
             if [[ -n "$def" ]]; then
+                _meta_validate_opt_def "$opt" "$def"
                 _OPTIONS_DEFS+=("$def")
                 def=""
             fi
@@ -70,7 +71,24 @@ _meta_parse_options () {
             def="$def $line"
         fi
     done <<< "$options"
-    _OPTIONS_DEFS+=("$def")
+
+    if [[ -n "${opt-}" ]]; then
+        _meta_validate_opt_def "$opt" "$def"
+        _OPTIONS_DEFS+=("$def")
+    fi
+}
+
+_meta_validate_opt_def () {
+
+    eval "$2; printf '%s-%s\n' \"\${variable-}\" \"\${type-}\"" | while IFS=- read -r variable type; do
+        if [[ -z "$variable" ]]; then
+            out_fatal_error "missing \"variable\" parameter in option \"$1\""
+        elif [[ -z "$type" ]]; then
+            out_fatal_error "missing \"type\" parameter in option \"$1\""
+        elif ! util_in_array "$type" "flag" "option"; then
+            out_fatal_error "\"type\" parameter in option $1 should be either \"flag\" or \"option\""
+        fi
+    done
 }
 
 _meta_get_opt () {

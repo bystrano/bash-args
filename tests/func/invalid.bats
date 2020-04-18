@@ -36,3 +36,9 @@ EOF
     assert_equals "$status" 1
     assert_equals "$output" "$(fatal_error_format "duplicate option definitions : flag")"
 }
+
+@test "$NAME options without variables not allowed" {
+    run bash tests/fixtures/invalid.sh
+    assert_equals "$status" 1
+    assert_equals "$output" "$(fatal_error_format "missing \"variable\" parameter in option \"invalid-option\"")"
+}
