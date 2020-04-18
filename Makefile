@@ -4,6 +4,8 @@
 .PHONY: run     # run an interactive session in docker (see Dockerfile)
 .PHONY: profile # profile a run and display the result nicely
 
+BASH-VERSION := 3.2
+
 BATS      := vendor/bats/bin/bats
 BATS_REPO := https://github.com/bats-core/bats-core.git
 
@@ -43,8 +45,8 @@ $(STATE_DIR)/lint: $(BASH_SRC) | $(STATE_DIR)
 
 
 run:
-	@docker build -t bash-args .
-	@docker run -it --rm --mount src=`pwd`,target=/bash-args,type=bind bash-args
+	docker build --build-arg BASH_VERSION=$(BASH-VERSION) -t bash-args .
+	docker run -it --rm --mount src=`pwd`,target=/bash-args,type=bind bash-args $(RUN-CMD)
 
 
 profile:

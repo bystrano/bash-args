@@ -1,3 +1,5 @@
-FROM bash:3.2
+ARG BASH_VERSION
+
+FROM bash:$BASH_VERSION
 
 RUN apk update && apk add make git
