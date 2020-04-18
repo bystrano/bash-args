@@ -5,17 +5,20 @@ _complete () {
     local candidates cur cur_index option
 
     # shellcheck disable=2086
+    _opt_get_args_list ${COMP_LINE:0:$COMP_POINT+1}
+
+    cur_index=$((${#_ARGS[@]} - 1))
+    if [[ "${COMP_LINE:(COMP_POINT-1):1}" == " " ]]; then
+        cur=''
+    else
+        cur="${_ARGS[$cur_index]}"
+    fi
+
+    # shellcheck disable=2086
     _opt_get_args_list $COMP_LINE
 
     unset "_ARGS[0]"
-
-    if [[ "${COMP_LINE:(-1)}" == " " ]]; then
-        cur=''
-    else
-        cur_index=${#_ARGS[@]}
-        cur="${_ARGS[$cur_index]}"
-        unset "_ARGS[$cur_index]"
-    fi
+    unset "_ARGS[$cur_index]"
 
     _opt_expand_short_opts
     _opt_parse_args
@@ -35,5 +38,6 @@ _complete () {
     else
         compgen -W "$(_cmds_get_commands)" -- "${cur}"
     fi
-    exit;
+
+    exit 0;
 }

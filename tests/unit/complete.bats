@@ -7,7 +7,8 @@ SCRIPT_OPTIONS=tests/fixtures/options.sh
 load ../helper
 
 @test "$NAME complete commands" {
-    export COMP_LINE="subcommand.sh "
+    export COMP_LINE="subcommands.sh "
+    export COMP_POINT=15
     run ${SCRIPT_SUBCMD} _complete
     expected=$(cat << EOF
 help
@@ -21,6 +22,7 @@ EOF
 
 @test "$NAME complete long options" {
     export COMP_LINE="options.sh -"
+    export COMP_POINT=13
     run ${SCRIPT_OPTIONS} _complete
     expected=$(cat << EOF
 -h
@@ -39,6 +41,7 @@ EOF
 @test "$NAME complete command options when a subcommand is already input" {
 
     export COMP_LINE="subcommands.sh -"
+    export COMP_POINT=16
     run ${SCRIPT_SUBCMD} _complete
     expected=$(cat << EOF
 -h
@@ -50,6 +53,7 @@ EOF
     assert_equals "$output" "$expected"
 
     export COMP_LINE="subcommands.sh subcommand1 -"
+    export COMP_POINT=28
     run ${SCRIPT_SUBCMD} _complete
     expected=$(cat << EOF
 -h
@@ -60,6 +64,22 @@ EOF
 --opt-req
 --opt-opt
 -o
+--opt
+EOF
+            )
+    assert_equals "$output" "$expected"
+}
+
+@test "$NAME complete options before an already input command" {
+
+    export COMP_LINE="subcommands.sh -- subcommand1"
+    export COMP_POINT=17
+    run $SCRIPT_SUBCMD _complete
+    expected=$(cat << EOF
+--help
+--flag
+--opt-req
+--opt-opt
 --opt
 EOF
             )
