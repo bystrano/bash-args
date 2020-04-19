@@ -5,7 +5,7 @@
 # Options :
 #
 # % opt
-# desc="An option that requires a argument." arg_type=number
+# desc="An option that requires a argument." argument_complete=number
 # short="o" type="option" variable="my_option" default="opt_default"
 #
 set -euo pipefail

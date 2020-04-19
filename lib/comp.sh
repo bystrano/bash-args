@@ -49,7 +49,7 @@ _complete () {
         if [[ "${prev-}" =~ ^--(.*)$ ]]; then
             option="${BASH_REMATCH[1]}"
             option_value="$(_meta_get_opt "$option" "value")"
-            option_arg_type="$(_meta_get_opt "$option" "arg_type")"
+            opt_arg_comp="$(_meta_get_opt "$option" "argument_complete")"
             if [[ -z "$option_value" ]]; then
                 opt_arg_required=1
             else
@@ -68,13 +68,13 @@ _complete () {
         fi
 
         if [[ -n "$option" ]]; then
-            if [[ -n "$option_arg_type" ]]; then
-                if [[ $(type -t "_complete_${option_arg_type}") == "function" ]]; then
-                    eval "_complete_${option_arg_type} \"$cur\""
+            if [[ -n "$opt_arg_comp" ]]; then
+                if [[ $(type -t "_complete_${opt_arg_comp}") == "function" ]]; then
+                    eval "_complete_${opt_arg_comp} \"$cur\""
                 else
                     # this is a serious error we allow it to be shown when auto-completing.
                     unset _SILENT
-                    out_fatal_error "function _complete_${option_arg_type} is undefined"
+                    out_fatal_error "function _complete_${opt_arg_comp} is undefined"
                 fi
             fi
         fi

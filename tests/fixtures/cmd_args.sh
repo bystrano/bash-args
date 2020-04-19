@@ -5,11 +5,11 @@
 # Options :
 #
 # % first
-# desc="An optional option that may take an argument." arg_type=number
+# desc="An optional option that may take an argument." argument_complete=number
 # short="f" type="option" variable="opt_req" value="opt_value" default="opt_default"
 #
 # % second
-# desc="An optional option that may take an argument." arg_type="file"
+# desc="An optional option that may take an argument." argument_complete="file"
 # short="s" type="option" variable="opt_opt" default="opt_default"
 #
 set -euo pipefail
