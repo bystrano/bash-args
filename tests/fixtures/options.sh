@@ -16,6 +16,8 @@
 # desc="An optional option that may take a argument. And has a nasty % character in its description."
 # short="o" type="option" variable="opt_opt" value="opt_value" default="opt_default"
 #
+# Argument complete : directory
+#
 set -euo pipefail
 
 # ignore the subcommands

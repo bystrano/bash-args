@@ -62,13 +62,13 @@ _complete () {
         fi
 
         if [[ $opt_arg_required -eq 0 ]]; then
+            arg_comp="$(_meta_get "argument_complete" "${CMD-}")"
+            _comp_complete_argument "$arg_comp"
+
             if [[ -z "${CMD-}" ]]; then
                 for cmd in $(_cmds_get_commands); do
                     COMP_REPLIES+=("$cmd")
                 done
-            else
-                arg_comp="$(_meta_get "argument_complete" "$CMD")"
-                _comp_complete_argument "$arg_comp"
             fi
         fi
 
@@ -104,5 +104,14 @@ _complete_file () {
 
     for file in ${1-}*; do
         COMP_REPLIES+=("$file")
+    done
+}
+
+_complete_directory () {
+
+    for file in ${1-}*; do
+        if [[ -d "$file" ]]; then
+            COMP_REPLIES+=("$file")
+        fi
     done
 }

@@ -162,6 +162,19 @@ EOF
     assert_equals "$output" "$expected"
 }
 
+@test "$NAME auto-complete directories" {
+    export COMP_LINE="options.sh tests/"
+    export COMP_POINT=17
+    run $SCRIPT_OPTIONS _complete
+    expected=$(cat << EOF
+tests/fixtures
+tests/func
+tests/unit
+EOF
+            )
+    assert_equals "$output" "$expected"
+}
+
 @test "$NAME _register_autocomplete" {
 
     run ${SCRIPT_SUBCMD} _register_autocomplete
