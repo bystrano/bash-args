@@ -3,6 +3,7 @@
 NAME="complete:"
 SCRIPT_SUBCMD=tests/fixtures/subcommands.sh
 SCRIPT_OPTIONS=tests/fixtures/options.sh
+SCRIPT_ARGS=tests/fixtures/cmd_args.sh
 
 load ../helper
 
@@ -95,9 +96,9 @@ EOF
 }
 
 @test "$NAME auto-complete on option arguments - defined by a custom function" {
-    export COMP_LINE="subcommands.sh --opt "
-    export COMP_POINT=21
-    run $SCRIPT_SUBCMD _complete
+    export COMP_LINE="cmd_args.sh --first "
+    export COMP_POINT=20
+    run $SCRIPT_ARGS _complete
     expected=$(cat << EOF
 help
 subcommand1
@@ -109,7 +110,19 @@ three
 EOF
             )
     assert_equals "$output" "$expected"
+}
 
+@test "$NAME don't suggest commands when completing a required option argument" {
+    export COMP_LINE="subcommands.sh --opt "
+    export COMP_POINT=21
+    run $SCRIPT_SUBCMD _complete
+    expected=$(cat << EOF
+one
+two
+three
+EOF
+            )
+    assert_equals "$output" "$expected"
 }
 
 @test "$NAME _register_autocomplete" {

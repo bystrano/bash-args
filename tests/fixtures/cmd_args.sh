@@ -14,12 +14,20 @@
 #
 set -euo pipefail
 
+# a auto-complete function for the opt option
+_complete_first () {
+
+    COMP_REPLIES+=("one")
+    COMP_REPLIES+=("two")
+    COMP_REPLIES+=("three")
+}
+
 # shellcheck source=/dev/null
 . "$(dirname "$0")"/../../init_script.sh
 
-printf "cmd: %s\n" "$CMD"
 
-# shellcheck disable=SC2039
+printf "cmd: %s\n" "${CMD-}"
+
 for opt in "${CMD_ARGS[@]}"; do
     printf "%s\n" "$opt"
 done
