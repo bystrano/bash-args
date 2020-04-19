@@ -137,7 +137,7 @@ _opt_parse_args () {
             fi
         else
             opt="$item"
-            opt_name=$(_opt_get_name "$opt" "${CMD:-}")
+            opt_name=$(_opt_get_name "$opt")
 
             if [[ -z "$opt_name" ]]; then
                 out_usage_error "invalid option : $opt"

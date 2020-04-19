@@ -20,15 +20,6 @@ _complete () {
         fi
     fi
 
-    # if short option, expand.
-    if [[ "${prev-}" =~ ^- ]]; then
-        # if grouped short options, keep the last one.
-        if [[ "$prev" =~ ^-[a-zA-Z]+ ]]; then
-            prev="-${prev:${#prev}-1}"
-        fi
-        prev="--$(_opt_get_name "$prev")"
-    fi
-
     # shellcheck disable=2086
     _opt_get_args_list $COMP_LINE
 
@@ -40,8 +31,18 @@ _complete () {
     _opt_expand_short_opts
     _opt_parse_args
 
+    _meta_parse_options "${CMD:-}"
+
+    # if short option, expand.
+    if [[ "${prev-}" =~ ^-[^-] ]]; then
+        # if grouped short options, keep the last one.
+        if [[ "$prev" =~ ^-[a-zA-Z]+ ]]; then
+            prev="-${prev:${#prev}-1}"
+        fi
+        prev="--$(_opt_get_name "$prev")"
+    fi
+
     if [[ "$cur" =~ ^- ]]; then
-        _meta_parse_options "${CMD:-}"
         candidates=""
         for option in "${_OPTIONS[@]}"; do
             short="$(_meta_get_opt "$option" "short")"
