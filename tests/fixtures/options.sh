@@ -9,7 +9,7 @@
 # short="f" type="flag" variable="flag" value="1" default=0
 #
 # % opt-req
-# desc="An optional option that requires a argument."
+# desc="An optional option that requires a argument." argument_complete=number
 # short="O" type="option" variable="opt_req" default="opt_default"
 #
 # % opt-opt
@@ -23,6 +23,14 @@ set -euo pipefail
 # ignore the subcommands
 # shellcheck disable=2034
 CMDS_DIR=_
+
+# a auto-complete function for the opt option
+_complete_number () {
+
+    COMP_REPLIES+=("one")
+    COMP_REPLIES+=("two")
+    COMP_REPLIES+=("three")
+}
 
 # shellcheck source=/dev/null
 . "$(dirname "$0")"/../../init_script.sh

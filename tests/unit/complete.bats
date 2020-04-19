@@ -132,6 +132,33 @@ EOF
     assert_equals "$output" "$expected"
 }
 
+@test "$NAME auto-complete arguments on short options" {
+    export COMP_LINE="subcommands.sh -o "
+    export COMP_POINT=18
+    run $SCRIPT_SUBCMD _complete
+    expected=$(cat << EOF
+one
+two
+three
+EOF
+            )
+    assert_equals "$output" "$expected"
+}
+
+@test "$NAME auto-complete arguments on grouped short options" {
+    skip
+    export COMP_LINE="options.sh -fO "
+    export COMP_POINT=15
+    run $SCRIPT_OPTIONS _complete
+    expected=$(cat << EOF
+one
+two
+three
+EOF
+            )
+    assert_equals "$output" "$expected"
+}
+
 @test "$NAME auto-complete on option arguments - defined by argument type" {
     export COMP_LINE="cmd_args.sh --second tests/"
     export COMP_POINT=27

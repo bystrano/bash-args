@@ -20,6 +20,15 @@ _complete () {
         fi
     fi
 
+    # if short option, expand.
+    if [[ "${prev-}" =~ ^- ]]; then
+        # if grouped short options, keep the last one.
+        if [[ "$prev" =~ ^-[a-zA-Z]+ ]]; then
+            prev="-${prev:${#prev}-1}"
+        fi
+        prev="--$(_opt_get_name "$prev")"
+    fi
+
     # shellcheck disable=2086
     _opt_get_args_list $COMP_LINE
 

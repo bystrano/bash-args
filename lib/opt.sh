@@ -24,12 +24,11 @@ _opt_expand_short_opts () {
 }
 
 _opt_get_name () {
-    local subcmd name short
+    local name short
 
-    subcmd="${2-}"
     for name in "${_OPTIONS[@]}"; do
 
-        short=$(_meta_get_opt "$name" "short" "$subcmd")
+        short=$(_meta_get_opt "$name" "short")
 
         if [[ "$1" == "-$short" ]] || [[ "$1" == "--$name" ]]; then
             printf "%s" "$name"
