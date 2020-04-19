@@ -147,6 +147,21 @@ EOF
     assert_equals "$output" "$expected"
 }
 
+@test "$NAME auto-complete on command arguments" {
+    export COMP_LINE="subcommands.sh subcommand2 tests/"
+    export COMP_POINT=33
+    run $SCRIPT_SUBCMD _complete
+    expected=$(cat << EOF
+tests/fixtures
+tests/func
+tests/helper.bash
+tests/show_profile.sh
+tests/unit
+EOF
+            )
+    assert_equals "$output" "$expected"
+}
+
 @test "$NAME _register_autocomplete" {
 
     run ${SCRIPT_SUBCMD} _register_autocomplete

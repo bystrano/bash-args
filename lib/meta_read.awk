@@ -9,6 +9,7 @@ BEGIN {
     if (match($0, /^# ([^:]+) ?:/)) {
         current_meta = substr($0, 3, RLENGTH - 3)
         sub(/ +$/, "", current_meta)
+        sub(/ /, "_", current_meta)
         current_meta = tolower(current_meta)
 
         current_value = substr($0, RLENGTH + 1)

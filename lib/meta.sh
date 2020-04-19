@@ -23,13 +23,13 @@ _meta_get_raw () {
 _meta_read_files () {
     local cmd file
 
-    eval "$(<"${SCRIPT_DIR}/${SCRIPT_FILE}" awk -v cmd="" -f "${CMD_DIR}"/lib/meta_get.awk)"
+    eval "$(<"${SCRIPT_DIR}/${SCRIPT_FILE}" awk -v cmd="" -f "${CMD_DIR}"/lib/meta_read.awk)"
 
     if [[ -d "${SCRIPT_DIR}/${CMDS_DIR}" ]]; then
         for file in "${SCRIPT_DIR}/${CMDS_DIR}"/*.sh; do
             cmd="$(basename "$file")"
             cmd="${cmd:0:$((${#cmd}-3))}"
-            eval "$(<"$file" awk -v cmd="$cmd" -f "${CMD_DIR}"/lib/meta_get.awk)"
+            eval "$(<"$file" awk -v cmd="$cmd" -f "${CMD_DIR}"/lib/meta_read.awk)"
         done
     fi
 }

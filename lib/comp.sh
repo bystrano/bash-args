@@ -2,7 +2,7 @@
 set -euo pipefail
 
 _complete () {
-    local candidates cur cur_index option option_value opt_arg_required prev
+    local candidates cur cur_index option option_value opt_arg_comp opt_arg_required prev
 
     # shellcheck disable=2086
     _opt_get_args_list ${COMP_LINE:0:$COMP_POINT+1}
@@ -61,22 +61,19 @@ _complete () {
             opt_arg_required=0
         fi
 
-        if [[ $opt_arg_required -eq 0 ]] && [[ -z "${CMD-}" ]]; then
-            for cmd in $(_cmds_get_commands); do
-                COMP_REPLIES+=("$cmd")
-            done
+        if [[ $opt_arg_required -eq 0 ]]; then
+            if [[ -z "${CMD-}" ]]; then
+                for cmd in $(_cmds_get_commands); do
+                    COMP_REPLIES+=("$cmd")
+                done
+            else
+                arg_comp="$(_meta_get "argument_complete" "$CMD")"
+                _comp_complete_argument "$arg_comp"
+            fi
         fi
 
         if [[ -n "$option" ]]; then
-            if [[ -n "$opt_arg_comp" ]]; then
-                if [[ $(type -t "_complete_${opt_arg_comp}") == "function" ]]; then
-                    eval "_complete_${opt_arg_comp} \"$cur\""
-                else
-                    # this is a serious error we allow it to be shown when auto-completing.
-                    unset _SILENT
-                    out_fatal_error "function _complete_${opt_arg_comp} is undefined"
-                fi
-            fi
+            _comp_complete_argument "$opt_arg_comp"
         fi
 
         if [[ ${#COMP_REPLIES[@]} -gt 0 ]]; then
@@ -85,6 +82,22 @@ _complete () {
     fi
 
     exit 0;
+}
+
+_comp_complete_argument () {
+    local arg_type
+
+    arg_type="$1"
+
+    if [[ -n "$arg_type" ]]; then
+        if [[ $(type -t "_complete_${arg_type}") == "function" ]]; then
+            eval "_complete_${arg_type} \"$cur\""
+        else
+            # this is a serious error we allow it to be shown when auto-completing.
+            unset _SILENT
+            out_fatal_error "function _complete_${arg_type} is undefined"
+        fi
+    fi
 }
 
 _complete_file () {
