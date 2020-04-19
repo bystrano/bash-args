@@ -39,6 +39,13 @@ EOF
     assert_equals "$output" "$expected"
 }
 
+@test "$NAME don't print errors when using the _complete command" {
+    export COMP_LINE="subcommands --invalid "
+    export COMP_POINT=22
+    run $SCRIPT_SUBCMD _complete
+    assert_equals "$output" ""
+}
+
 @test "$NAME complete command options when a subcommand is already input" {
 
     export COMP_LINE="subcommands.sh -"

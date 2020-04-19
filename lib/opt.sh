@@ -122,6 +122,8 @@ _opt_parse_args () {
                 CMD="$item";
 
                 if [[ "$CMD" == "_complete" ]]; then
+                    # shellcheck disable=2034
+                    _SILENT=1
                     _complete
                     exit 0
                 elif [[ "$CMD" == "_register_autocomplete" ]]; then
