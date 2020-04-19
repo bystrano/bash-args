@@ -132,6 +132,21 @@ EOF
     assert_equals "$output" "$expected"
 }
 
+@test "$NAME auto-complete on option arguments - defined by argument type" {
+    export COMP_LINE="cmd_args.sh --second tests/"
+    export COMP_POINT=27
+    run $SCRIPT_ARGS _complete
+    expected=$(cat << EOF
+tests/fixtures
+tests/func
+tests/helper.bash
+tests/show_profile.sh
+tests/unit
+EOF
+            )
+    assert_equals "$output" "$expected"
+}
+
 @test "$NAME _register_autocomplete" {
 
     run ${SCRIPT_SUBCMD} _register_autocomplete

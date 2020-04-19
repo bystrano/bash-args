@@ -49,6 +49,7 @@ _complete () {
         if [[ "${prev-}" =~ ^--(.*)$ ]]; then
             option="${BASH_REMATCH[1]}"
             option_value="$(_meta_get_opt "$option" "value")"
+            option_arg_type="$(_meta_get_opt "$option" "arg_type")"
             if [[ -z "$option_value" ]]; then
                 opt_arg_required=1
             else
@@ -66,8 +67,20 @@ _complete () {
             done
         fi
 
-        if [[ -n "$option" ]] && [[ $(type -t "_complete_$option") == "function" ]]; then
-            eval "_complete_$option \"$cur\""
+        if [[ -n "$option" ]]; then
+            if [[ -n "$option_arg_type" ]]; then
+                if [[ $(type -t "_complete_arg_${option_arg_type}") == "function" ]]; then
+                    eval "_complete_arg_${option_arg_type} \"$cur\""
+                else
+                    # this is a serious error we allow it to be shown when auto-completing.
+                    unset _SILENT
+                    out_fatal_error "function _complete_arg_${option_arg_type} is undefined"
+                fi
+            else
+                if [[ $(type -t "_complete_opt_$option") == "function" ]]; then
+                    eval "_complete_opt_$option \"$cur\""
+                fi
+            fi
         fi
 
         if [[ ${#COMP_REPLIES[@]} -gt 0 ]]; then
@@ -76,4 +89,11 @@ _complete () {
     fi
 
     exit 0;
+}
+
+_complete_arg_file () {
+
+    for file in ${1-}*; do
+        COMP_REPLIES+=("$file")
+    done
 }

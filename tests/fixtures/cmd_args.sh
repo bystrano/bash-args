@@ -9,13 +9,13 @@
 # short="f" type="option" variable="opt_req" value="opt_value" default="opt_default"
 #
 # % second
-# desc="An optional option that may take an argument."
-# short="s" type="option" variable="opt_opt" value="opt_value" default="opt_default"
+# desc="An optional option that may take an argument." arg_type="file"
+# short="s" type="option" variable="opt_opt" default="opt_default"
 #
 set -euo pipefail
 
 # a auto-complete function for the opt option
-_complete_first () {
+_complete_opt_first () {
 
     COMP_REPLIES+=("one")
     COMP_REPLIES+=("two")

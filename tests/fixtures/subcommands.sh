@@ -19,7 +19,7 @@ if [[ "${_PROFILE:=0}" -eq 1 ]]; then
 fi
 
 # a auto-complete function for the opt option
-_complete_opt () {
+_complete_opt_opt () {
 
     COMP_REPLIES+=("one")
     COMP_REPLIES+=("two")
