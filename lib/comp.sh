@@ -69,16 +69,12 @@ _complete () {
 
         if [[ -n "$option" ]]; then
             if [[ -n "$option_arg_type" ]]; then
-                if [[ $(type -t "_complete_arg_${option_arg_type}") == "function" ]]; then
-                    eval "_complete_arg_${option_arg_type} \"$cur\""
+                if [[ $(type -t "_complete_${option_arg_type}") == "function" ]]; then
+                    eval "_complete_${option_arg_type} \"$cur\""
                 else
                     # this is a serious error we allow it to be shown when auto-completing.
                     unset _SILENT
-                    out_fatal_error "function _complete_arg_${option_arg_type} is undefined"
-                fi
-            else
-                if [[ $(type -t "_complete_opt_$option") == "function" ]]; then
-                    eval "_complete_opt_$option \"$cur\""
+                    out_fatal_error "function _complete_${option_arg_type} is undefined"
                 fi
             fi
         fi
@@ -91,7 +87,7 @@ _complete () {
     exit 0;
 }
 
-_complete_arg_file () {
+_complete_file () {
 
     for file in ${1-}*; do
         COMP_REPLIES+=("$file")

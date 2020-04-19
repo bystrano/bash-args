@@ -5,7 +5,7 @@
 # Options :
 #
 # % opt
-# desc="An option that requires a argument."
+# desc="An option that requires a argument." arg_type=number
 # short="o" type="option" variable="my_option" default="opt_default"
 #
 set -euo pipefail
@@ -19,7 +19,7 @@ if [[ "${_PROFILE:=0}" -eq 1 ]]; then
 fi
 
 # a auto-complete function for the opt option
-_complete_opt_opt () {
+_complete_number () {
 
     COMP_REPLIES+=("one")
     COMP_REPLIES+=("two")

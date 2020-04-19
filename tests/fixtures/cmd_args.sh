@@ -5,7 +5,7 @@
 # Options :
 #
 # % first
-# desc="An optional option that may take an argument."
+# desc="An optional option that may take an argument." arg_type=number
 # short="f" type="option" variable="opt_req" value="opt_value" default="opt_default"
 #
 # % second
@@ -15,7 +15,7 @@
 set -euo pipefail
 
 # a auto-complete function for the opt option
-_complete_opt_first () {
+_complete_number () {
 
     COMP_REPLIES+=("one")
     COMP_REPLIES+=("two")
