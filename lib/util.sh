@@ -35,5 +35,6 @@ util_trace () {
 
 util_dbg () {
 
+    unset _SILENT
     printf "in %s : %s\n" "${FUNCNAME[1]}" "$1" >&2
 }
