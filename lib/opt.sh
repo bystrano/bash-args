@@ -131,6 +131,8 @@ _opt_parse_args () {
                     CMD="$item"
                     # now that we know the command, we add its option definitions.
                     _meta_parse_options "$CMD"
+                else
+                    CMD_ARGS+=("$item")
                 fi
             else
                 CMD_ARGS+=("$item")

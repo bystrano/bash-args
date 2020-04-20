@@ -72,3 +72,13 @@ done
 ## Parse the arguments
 
 _opt_process_opts "$@"
+
+
+####
+## Set the positional arguments
+
+if [[ "${#CMD_ARGS[@]}" -gt 0 ]]; then
+    set -- "${CMD_ARGS[@]}"
+else
+    set --
+fi

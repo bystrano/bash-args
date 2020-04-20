@@ -39,3 +39,10 @@ _complete_number () {
 printf "flag: %s\n" "${flag:=}"
 printf "opt-req: %s\n" "${opt_req:=}"
 printf "opt-opt: %s\n" "${opt_opt:=}"
+
+# shellcheck disable=2016
+printf '$1: %s\n' "${1-}"
+# shellcheck disable=2016
+printf '$2: %s\n' "${2-}"
+# shellcheck disable=2016
+printf '$3: %s\n' "${3-}"

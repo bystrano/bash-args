@@ -11,6 +11,9 @@ load ../helper
 flag: 0
 opt-req: opt_default
 opt-opt: opt_default
+\$1: 
+\$2: 
+\$3: 
 EOF
 )
     assert_equals "$output" "$expected"
@@ -96,18 +99,24 @@ EOF
 flag: 1
 opt-req: opt_default
 opt-opt: opt_value
+\$1: 
+\$2: 
+\$3: 
 EOF
 )
     assert_equals "$output" "$expected"
 }
 
-@test "$NAME arguments don't cause errors." {
-    run bash "$SCRIPT" 'hello world'
+@test "$NAME positional arguments are properly set." {
+    run bash "$SCRIPT" -f 'hello world'
     assert_equals "$status" 0
     expected=$(cat << EOF
-flag: 0
+flag: 1
 opt-req: opt_default
 opt-opt: opt_default
+\$1: hello world
+\$2: 
+\$3: 
 EOF
             )
     assert_equals "$output" "$expected"
