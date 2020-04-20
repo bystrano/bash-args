@@ -21,6 +21,14 @@ EOF
     assert_equals "$output" "$expected"
 }
 
+@test "$NAME don't suggest the help command when there is no subcommands." {
+    export COMP_LINE="options.sh "
+    export COMP_POINT=11
+    run grep help < <(${SCRIPT_OPTIONS} _complete)
+    assert_equals "$output" "$expected"
+    assert_equals "$output" ""
+}
+
 @test "$NAME complete long options" {
     export COMP_LINE="options.sh -"
     export COMP_POINT=13

@@ -59,8 +59,8 @@ _help_commands () {
 
     cmds=$(_cmds_get_commands)
 
-    # if there's only the help command, don't show it.
-    if [[ "$cmds" == "help " ]]; then
+    # if there's no commands, don't show anything.
+    if [[ "$cmds" == "" ]]; then
         return
     fi
 

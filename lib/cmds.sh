@@ -4,8 +4,8 @@ set -euo pipefail
 _cmds_get_commands () {
     local file cmd
 
-    printf 'help '
-    if [[ -d "${SCRIPT_DIR}/${CMDS_DIR}" ]]; then
+    if [[ -d "${SCRIPT_DIR}/${CMDS_DIR}" ]] && [[ -n "$(ls -A "$SCRIPT_DIR"/"$CMDS_DIR")" ]]; then
+        printf 'help '
         for file in "$SCRIPT_DIR"/"$CMDS_DIR"/*.sh; do
             file=$(basename "$file")
             cmd="${file:0:${#file}-3}"
