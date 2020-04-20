@@ -126,7 +126,7 @@ _opt_parse_args () {
                     _complete
                     exit 0
                 elif [[ "$CMD" == "_register_autocomplete" ]]; then
-                    printf "complete -C \"%s _complete\" %s\n" "$SCRIPT_FILE" "$SCRIPT_FILE"
+                    printf "complete -C \"%s _complete\" %s\n" "$(realpath "$SCRIPT_DIR"/"$SCRIPT_FILE")" "$SCRIPT_FILE"
                     exit 0
                 else
                     # now that we know the command, we add its option definitions.
