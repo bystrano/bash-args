@@ -100,3 +100,15 @@ EOF
 )
     assert_equals "$output" "$expected"
 }
+
+@test "$NAME arguments don't cause errors." {
+    run bash "$SCRIPT" 'hello world'
+    assert_equals "$status" 0
+    expected=$(cat << EOF
+flag: 0
+opt-req: opt_default
+opt-opt: opt_default
+EOF
+            )
+    assert_equals "$output" "$expected"
+}

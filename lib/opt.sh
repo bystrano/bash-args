@@ -118,17 +118,17 @@ _opt_parse_args () {
 
         if [[ ! "$item" =~ ^- ]]; then
             if [[ -z ${CMD+x} ]]; then
-                CMD="$item";
 
-                if [[ "$CMD" == "_complete" ]]; then
+                if [[ "$item" == "_complete" ]]; then
                     # shellcheck disable=2034
                     _SILENT=1
                     _complete
                     exit 0
-                elif [[ "$CMD" == "_register_autocomplete" ]]; then
+                elif [[ "$item" == "_register_autocomplete" ]]; then
                     printf "complete -C \"%s _complete\" %s\n" "$(realpath "$SCRIPT_DIR"/"$SCRIPT_FILE")" "$SCRIPT_FILE"
                     exit 0
-                else
+                elif [[ "$item" == "help" ]] || ( [[ -d "$SCRIPT_DIR/$CMDS_DIR" ]] && [[ -f "$SCRIPT_DIR/$CMDS_DIR/${item}.sh" ]] ); then
+                    CMD="$item"
                     # now that we know the command, we add its option definitions.
                     _meta_parse_options "$CMD"
                 fi
