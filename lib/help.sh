@@ -18,6 +18,11 @@ _help_print_subcommand () {
     _help_options "$1"
 }
 
+_help_print_version () {
+
+    printf '%s %s\n' "$SCRIPT_FILE" "$(_meta_get "version")"
+}
+
 _help_summary () {
 
     _meta_get "summary" "${1-}" | util_fmt "$TERM_WIDTH"

@@ -2,6 +2,8 @@
 #
 # Summary : A simple script that takes no options nor subcommands.
 #
+# Version : 1.0.0
+#
 # dEscription: This is a 'long' description of the commands. This is not
 # "necessary" here because this command is so simple, but we need an example.
 #

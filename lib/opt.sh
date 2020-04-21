@@ -59,6 +59,9 @@ _opt_interpret () {
                 _help_print_subcommand "$CMD"
             fi
             exit 0
+        elif [[ "$name" == "version" ]]; then
+            _help_print_version
+            exit 0
         else
             export "$variable=$value"
         fi

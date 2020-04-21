@@ -24,6 +24,9 @@ Options :
 
   --help | -h
           Show this help.
+
+  --version
+          Show version informations.
 EOF
             )
     assert_equals "$output" "$expected"
@@ -43,7 +46,15 @@ Options :
 
   --help | -h
           Show this help.
+
+  --version
+          Show version informations.
 EOF
 )
     assert_equals "$output" "$expected"
+}
+
+@test "$NAME show version informations" {
+    run bash "$SCRIPT" --version
+    assert_equals "$output" "noop.sh 1.0.0"
 }
