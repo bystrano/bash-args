@@ -102,10 +102,6 @@ _comp_complete_argument () {
     if [[ -n "$arg_type" ]]; then
         if [[ $(type -t "_complete_${arg_type}") == "function" ]]; then
             eval "_complete_${arg_type} \"$cur\""
-        else
-            # this is a serious error we allow it to be shown when auto-completing.
-            unset _SILENT
-            out_fatal_error "function _complete_${arg_type} is undefined"
         fi
     fi
 }
