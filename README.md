@@ -3,7 +3,7 @@ Bash-args
 
 This is a framework for writing bash scripts that accept options and/or
 arguments. The options and arguments accepted by your script are defined in the
-first comment block using a simple declarative syntax. The framework uses these
+first comment block using a simple declarative syntax. _bash-args_ uses these
 metadata to:
 
 - Parse the command arguments
@@ -13,7 +13,7 @@ metadata to:
 It is designed to be simple to use, to get out of the way, and to provide a
 polished CLI UX.
 
-It aims to be widely compatible, the test suite targets all major versions of
+It aims to be widely compatible, the test suite passes on all major versions of
 bash >= 3.2.
 
 Quickstart
@@ -44,7 +44,7 @@ Here is an example script `eval-command.sh` :
 #
 
 # source bash-args' init script
-. path/to/bash-args/init_script.sh
+. path/to/bash-args/init.sh
 
 # After sourcing the script, you can use the $directory and the $dry_run
 # variables to get the options passed (or not) in the command line.

@@ -33,7 +33,7 @@ _complete_number () {
 }
 
 # shellcheck source=/dev/null
-. "$(dirname "$0")"/../../init_script.sh
+. "$(dirname "$0")"/../../init.sh
 
 
 printf "flag: %s\n" "${flag:=}"

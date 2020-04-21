@@ -14,4 +14,4 @@ set -euo pipefail
 CMDS_DIR=cmd_invalid
 
 # shellcheck source=/dev/null
-. "$(dirname "$0")"/../../init_script.sh
+. "$(dirname "$0")"/../../init.sh

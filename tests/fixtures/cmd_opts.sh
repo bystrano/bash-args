@@ -15,7 +15,7 @@
 set -euo pipefail
 
 # shellcheck source=/dev/null
-. "$(dirname "$0")"/../../init_script.sh
+. "$(dirname "$0")"/../../init.sh
 
 for opt in "${CMD_OPTS[@]}"; do
     printf "%s\n" "$opt"
