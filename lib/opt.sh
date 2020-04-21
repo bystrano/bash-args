@@ -52,19 +52,21 @@ _opt_interpret () {
     variable=$(_meta_get_opt "$name" "variable" "$subcmd")
 
     if [[ "$type" == "flag" ]]; then
-        export "$variable=$value"
-    else
-        if [[ -n "$argument" ]]; then
-            export "$variable=$argument"
-        elif [[ -n "$value" ]]; then
-            export "$variable=$value"
-        elif [[ "$name" == "help" ]]; then
+        if [[ "$name" == "help" ]]; then
             if [[ -z "${CMD+x}" ]]; then
                 _help_print_main
             else
                 _help_print_subcommand "$CMD"
             fi
             exit 0
+        else
+            export "$variable=$value"
+        fi
+    else
+        if [[ -n "$argument" ]]; then
+            export "$variable=$argument"
+        elif [[ -n "$value" ]]; then
+            export "$variable=$value"
         else
             out_usage_error "The --$name option requires an argument."
         fi

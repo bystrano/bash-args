@@ -123,12 +123,6 @@ _help_options () {
             value="$(_meta_get_opt "$option" "value" "$subcmd")"
             type=$(_meta_get_opt "$option" "type" "$subcmd")
 
-            if [[ "$option" == "help" ]] && [[ -z "$variable" ]]; then
-                usages+=("  --help | -h")
-                descs+=("Show this help.")
-                continue
-            fi
-
             if [[ -z "$short" ]]; then
                 usage="  --$option"
             else
@@ -143,6 +137,8 @@ _help_options () {
 
             usages+=("$usage")
             descs+=("$(_meta_get_opt "$option" "desc" "$subcmd" | util_fmt $((TERM_WIDTH - desc_offset)))")
+
+            unset short variable value type
         done
     fi
 

@@ -42,7 +42,7 @@ _meta_parse_options () {
     fi
 
     _OPTIONS=("help")
-    _OPTIONS_DEFS=("short=h")
+    _OPTIONS_DEFS=("type=flag variable=help value=1 default=0 short=h desc='Show this help.'")
 
     def=""
     options="$(printf '%s\n%s' "${options-}" "$(_meta_get_raw "options")")"
