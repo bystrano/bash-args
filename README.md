@@ -37,7 +37,7 @@ Here is an example script `eval-command.sh` :
 # short="n" type="flag" variable="dry_run" value=1 default=0
 #
 # % directory
-# desc="The directory in which to run the command." argument_complete=directory
+# desc="The directory in which to run the command." argument=directory
 # short="d" type="option" variable="directory" default="$(pwd)"
 #
 set -euo pipefail

@@ -122,7 +122,7 @@ _opt_parse_args () {
                 if [[ "$item" == "_complete" ]]; then
                     # shellcheck disable=2034
                     _SILENT=1
-                    _complete
+                    _comp_complete
                     exit 0
                 elif [[ "$item" == "_register_autocomplete" ]]; then
                     printf "complete -C \"%s _complete\" %s\n" "$(realpath "$SCRIPT_DIR"/"$SCRIPT_FILE")" "$SCRIPT_FILE"

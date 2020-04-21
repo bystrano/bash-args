@@ -2,6 +2,6 @@
 #
 # Summary : A subcommand that does nothing.
 #
-# Argument complete : file
+# Argument : file
 #
 set -euo pipefail

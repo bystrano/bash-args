@@ -9,14 +9,14 @@
 # short="f" type="flag" variable="flag" value="1" default=0
 #
 # % opt-req
-# desc="An optional option that requires a argument." argument_complete=number
+# desc="An optional option that requires a argument." argument=number
 # short="O" type="option" variable="opt_req" default="opt_default"
 #
 # % opt-opt
 # desc="An optional option that may take a argument. And has a nasty % character in its description."
 # short="o" type="option" variable="opt_opt" value="opt_value" default="opt_default"
 #
-# Argument complete : directory
+# Argument : directory
 #
 set -euo pipefail
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-_complete () {
+_comp_complete () {
     local candidates cur cur_index option option_value opt_arg_comp opt_arg_required prev
 
     # shellcheck disable=2086
@@ -59,7 +59,7 @@ _complete () {
         if [[ "${prev-}" =~ ^--(.*)$ ]]; then
             option="${BASH_REMATCH[1]}"
             option_value="$(_meta_get_opt "$option" "value")"
-            opt_arg_comp="$(_meta_get_opt "$option" "argument_complete")"
+            opt_arg_comp="$(_meta_get_opt "$option" "argument")"
             if [[ -z "$option_value" ]]; then
                 opt_arg_required=1
             else
@@ -72,7 +72,7 @@ _complete () {
         fi
 
         if [[ $opt_arg_required -eq 0 ]]; then
-            arg_comp="$(_meta_get "argument_complete" "${CMD-}")"
+            arg_comp="$(_meta_get "argument" "${CMD-}")"
             _comp_complete_argument "$arg_comp"
 
             if [[ -z "${CMD-}" ]]; then
