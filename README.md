@@ -2,21 +2,25 @@ Bash-args
 =========
 
 This is a framework for writing bash scripts that accept options and/or
-arguments. You define the options and arguments accepted by your script in the
+arguments. The options and arguments accepted by your script are defined in the
 first comment block using a simple declarative syntax. The framework uses these
-metadatas to:
+metadata to:
 
 - Parse the command arguments
 - Generate help pages
 - Setup auto-completion
 
-It is designed to be simple to use, to get out of the way, and to be widely
-compatible. It is tested on all major versions of bash >= 3.2.
+It is designed to be simple to use, to get out of the way, and to provide a
+polished CLI UX.
+
+It aims to be widely compatible, the test suite targets all major versions of
+bash >= 3.2.
 
 Quickstart
 ----------
 
-To use _bash-args_ in your scripts, simply source it before doing anything.
+To use _bash-args_ in your scripts, simply source `init.sh` before doing
+anything.
 
 Here is an example script `eval-command.sh` :
 
@@ -52,10 +56,37 @@ else
 fi
 ```
 
-You can then run your command with options :
+That's it, you can now run your command with options :
 
-```bash
-# The help page is generated from the comments.
+```
+$ eval-command.sh 'echo hello' -n --directory /home
+cd /home && echo hello
+```
+
+The `$1` variable is set to the first argument that is not an option, even if it
+didn't come first in the CLI.
+
+```
+$ eval-command.sh --dry-run --directory /home 'echo hello'
+cd /home && echo hello
+```
+Short options can be grouped :
+
+```
+$ eval-command.sh -nd /home 'echo hello'
+cd /home && echo hello
+```
+
+You can setup auto-completion with a simple command (that should probably be
+copied into some init file) :
+
+```
+$ eval $(eval-command.sh _register_autocomplete)
+```
+
+A help page is generated automatically :
+
+```
 $ eval-command.sh --help
 My first bash script using bash-args.
 
@@ -73,18 +104,4 @@ Options :
 
   --directory | -d [DIRECTORY]
           The directory in which to run the command.
-
-# You can use the options you defined
-$ eval-command.sh 'echo hello' -n --directory /home
-cd /home && echo hello
-
-
-# The $1 variable is set to the first argument that is not an option, even if it
-# didn't come first.
-$ eval-command.sh --dry-run --directory /home 'echo hello'
-cd /home && echo hello
-
-# Short options can be grouped
-$ eval-command.sh -nd /home 'echo hello'
-cd /home && echo hello
 ```
