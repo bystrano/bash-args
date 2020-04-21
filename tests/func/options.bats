@@ -24,7 +24,7 @@ EOF
     expected=$(cat << EOF
 A simple script that takes some options but no subcommands.
 
-Usage : options.sh [OPTIONS]
+Usage : options.sh [OPTIONS] [DIRECTORY]
 
 Options :
 

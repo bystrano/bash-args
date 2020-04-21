@@ -24,7 +24,7 @@ _help_summary () {
 }
 
 _help_usage () {
-    local usage
+    local usage argument
 
     printf '\n\nUsage : '
 
@@ -32,7 +32,11 @@ _help_usage () {
         if [[ -n "${usage:="$(_meta_get "usage")"}" ]]; then
             printf '%s' "$usage"
         else
-            printf '%s [OPTIONS]' "$SCRIPT_FILE"
+            if [[ -n "${argument:="$(_meta_get "argument")"}" ]]; then
+                printf '%s [OPTIONS] [%s]' "$SCRIPT_FILE" "${argument^^}"
+            else
+                printf '%s [OPTIONS]' "$SCRIPT_FILE"
+            fi
         fi
     else
         if [[ -n "${usage:="$(_meta_get "usage" "$1")"}" ]]; then
@@ -40,7 +44,11 @@ _help_usage () {
         elif [[ "${CMD}" == "help" ]]; then
             printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD_ARGS[0]}"
         else
-            printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD}"
+            if [[ -n "${argument:="$(_meta_get "argument" "${CMD}")"}" ]]; then
+                printf "%s %s [OPTIONS] [%s]" "$SCRIPT_FILE" "${CMD}" "${argument^^}"
+            else
+                printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD}"
+            fi
         fi
     fi
 }
