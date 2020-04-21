@@ -33,7 +33,9 @@ _help_usage () {
             printf '%s' "$usage"
         else
             if [[ -n "${argument:="$(_meta_get "argument")"}" ]]; then
-                printf '%s [OPTIONS] [%s]' "$SCRIPT_FILE" "${argument^^}"
+                printf '%s [OPTIONS] [%s]' \
+                       "$SCRIPT_FILE" \
+                       "$(echo "$argument" | tr '[:lower:]' '[:upper:]')"
             else
                 printf '%s [OPTIONS]' "$SCRIPT_FILE"
             fi
@@ -45,7 +47,10 @@ _help_usage () {
             printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD_ARGS[0]}"
         else
             if [[ -n "${argument:="$(_meta_get "argument" "${CMD}")"}" ]]; then
-                printf "%s %s [OPTIONS] [%s]" "$SCRIPT_FILE" "${CMD}" "${argument^^}"
+                printf "%s %s [OPTIONS] [%s]" \
+                       "$SCRIPT_FILE" \
+                       "${CMD}" \
+                       "$(echo "$argument" | tr '[:lower:]' '[:upper:]')"
             else
                 printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD}"
             fi
