@@ -125,7 +125,7 @@ _opt_parse_args () {
                     _comp_complete
                     exit 0
                 elif [[ "$item" == "_register_autocomplete" ]]; then
-                    printf "complete -C \"%s _complete\" %s\n" "$(realpath "$SCRIPT_DIR"/"$SCRIPT_FILE")" "$SCRIPT_FILE"
+                    printf "complete -C '%s _complete' %s\n" "$(realpath "$SCRIPT_DIR"/"$SCRIPT_FILE")" "$SCRIPT_FILE"
                     exit 0
                 elif [[ "$item" == "help" ]] || ( [[ -d "$SCRIPT_DIR/$CMDS_DIR" ]] && [[ -f "$SCRIPT_DIR/$CMDS_DIR/${item}.sh" ]] ); then
                     CMD="$item"
