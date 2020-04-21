@@ -30,6 +30,8 @@ Here is an example script `eval-command.sh` :
 #
 # Description : This takes a command as argument, and runs it.
 #
+# Argument : command
+#
 # Options :
 #
 # % dry-run
@@ -40,7 +42,6 @@ Here is an example script `eval-command.sh` :
 # desc="The directory in which to run the command." argument=directory
 # short="d" type="option" variable="directory" default="$(pwd)"
 #
-set -euo pipefail
 
 # source bash-args' init script
 . path/to/bash-args/init_script.sh
@@ -90,7 +91,7 @@ A help page is generated automatically :
 $ eval-command.sh --help
 My first bash script using bash-args.
 
-Usage : eval-command.sh [OPTIONS]
+Usage : eval-command.sh [OPTIONS] [COMMAND]
 
 This takes a command as argument, and runs it.
 
