@@ -21,7 +21,7 @@ Table of contents
 ----------
 
 - [Quickstart](#quickstart)
-  - [Subcommands](#subcommmands)
+  - [Subcommands](#subcommands)
 - [Script metadatas](#script-metadatas)
 - [Defining options](#defining-options)
 - [Auto-completion](#auto-completion)
@@ -162,15 +162,15 @@ lines, up to the next field start, are appended to the value.
 Here are the fields you can use to document your scripts. They are used to
 generate the help pages.
 
-- *Summary* A one line description of the script.
-- *Description* A long description of the script.
-- *Version* A version string. If your main script has a version meta field, it
+- **Summary :** A one line description of the script.
+- **Description :** A long description of the script.
+- **Version :** A version string. If your main script has a version meta field, it
   will automatically be added the --version option that prints its name and
   version.
-- *Usage* If the automatically generated usage line in the help page doesn't
+- **Usage :** If the automatically generated usage line in the help page doesn't
   suit you, you can specify it here.
-- *Argument* Defines the argument type for auto-completion. see [Argument types](#argument-types)
-- *Options* Define the options of your script. see [Defining options](#defining-options)
+- **Argument :** Defines the argument type for auto-completion. see [Argument types](#argument-types)
+- **Options :** Define the options of your script. see [Defining options](#defining-options)
 
 
 Defining options
