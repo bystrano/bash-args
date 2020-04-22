@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-_cmds_get_commands () {
+_cmd_get_all () {
     local file cmd
 
     if [[ -d "${SCRIPT_DIR}/${CMDS_DIR}" ]] && [[ -n "$(ls -A "$SCRIPT_DIR"/"$CMDS_DIR")" ]]; then
@@ -16,7 +16,7 @@ _cmds_get_commands () {
     fi
 }
 
-cmds_do_subcommand () {
+cmd_run () {
 
     if [[ -f "${cmd_file:=${SCRIPT_DIR}/${CMDS_DIR}/${CMD:=help}.sh}" ]]; then
         # shellcheck source=/dev/null

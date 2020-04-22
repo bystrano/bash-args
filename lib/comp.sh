@@ -76,7 +76,7 @@ _comp_complete () {
             _comp_complete_argument "$arg_comp"
 
             if [[ -z "${CMD-}" ]]; then
-                for cmd in $(_cmds_get_commands); do
+                for cmd in $(_cmd_get_all); do
                     COMP_REPLIES+=("$cmd")
                 done
             fi

@@ -75,7 +75,7 @@ _help_description () {
 _help_commands () {
     local cmds max_cmd_length line_index
 
-    cmds=$(_cmds_get_commands)
+    cmds=$(_cmd_get_all)
 
     # if there's no commands, don't show anything.
     if [[ "$cmds" == "" ]]; then
