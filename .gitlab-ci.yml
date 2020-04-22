@@ -1,37 +1,58 @@
-before_script:
-  - apk update && apk add make git
+stages:
+  - lint
+  - test
+
+lint:shellcheck:
+  stage: lint
+  image: koalaman/shellcheck-alpine:latest
+  script:
+    - shellcheck $(find . -type f -name '*sh' -not -path './vendor/*')
 
 test:5.0:
+  stage: test
   image: bash:5.0
   script:
+    - apk update && apk add make git
     - make test
 
 test:4.4:
+  stage: test
   image: bash:4.4
   script:
+    - apk update && apk add make git
     - make test
 
 test:4.3:
+  stage: test
   image: bash:4.3
   script:
+    - apk update && apk add make git
     - make test
 
 test:4.2:
+  stage: test
   image: bash:4.2
   script:
+    - apk update && apk add make git
     - make test
 
 test:4.1:
+  stage: test
   image: bash:4.1
   script:
+    - apk update && apk add make git
     - make test
 
 test:4.0:
+  stage: test
   image: bash:4.0
   script:
+    - apk update && apk add make git
     - make test
 
 test:3.2:
+  stage: test
   image: bash:3.2
   script:
+    - apk update && apk add make git
     - make test
