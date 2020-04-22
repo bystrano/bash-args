@@ -111,10 +111,18 @@ Options :
 
 ### Subcommands ###
 
-_Bash-args_ provides a mecanism to define sub-commands. To use it, you need to
-call the `cmd_run` function at the end of your main script. You can then define
-subcommands by adding files in a special `cmd/` directory. Your project's
-structure should look like :
+_Bash-args_ provides a mecanism to define sub-commands that gives you the
+following features :
+
+- The subcommands are listed in the main commands' help.
+- You can get a help page for a specific command by typing `main-script.sh help
+  subcmd1`, or `main-script.sh subcmd1 --help`.
+- Auto-completion for the subcommands and their options and arguments.
+
+First, you need to call the `cmd_run` function at the end of your main script.
+
+Then, you define your subcommands by adding files in a special `cmd/` directory.
+Your project's structure should look like :
 
 ```
 main-script.sh
@@ -123,16 +131,10 @@ cmd/
   - subcmd2.sh
 ```
 
-You can then write metadatas in the first comment blocks of the subcommands,
-just like in the main script. It allows you to document, and define the options
-and arguments of the subcommands.
+To document, and define the options and arguments of the subcommands, simply
+write metadatas in the first comment blocks of the subcommands, just like in the
+main script.
 
 The options defined in the main script are valid for all subcommands, while
 options defined in a subcommand are specific to this subcommand.
 
-Following this structure gives you the following features :
-
-- The subcommands are listed in the main commands' help.
-- You can get a help page for a specific command by typing `main-script.sh help
-  subcmd1`, or `main-script.sh subcmd1 --help`.
-- Auto-completion for the subcommands and their options and arguments.
