@@ -176,6 +176,62 @@ generate the help pages.
 Defining options
 ----------------
 
+The options are defined in the *Options* metadata, like shown in the example
+script :
+
+```bash
+# Options :
+#
+# % dry-run
+# desc="Don't execute, just print."
+# short="n" type="flag" variable="dry_run" value=1 default=0
+#
+# % directory
+# desc="The directory in which to run the command." argument=directory
+# short="d" type="option" variable="directory" default="$(pwd)"
+#
+```
+
+An option starts with a `%` followed by its name. Option names must contain only
+alpha-numeric characters, or `_` or `-`.
+
+The following lines define the option's parameter. When the script is run, this
+is actually eval'd as bash code. The variables defined are the option's
+parameters. This means that the general quoting rules for strings apply, and
+that you can define the options dynamically, like in the example above, setting
+the `default` parameter of the `directory` option to `$(pwd)`.
+
+An option *must* define at least the `type` and `variable` parameter :
+
+- `type` can be either `flag` or `option`. Flags don't accept arguments, options
+  do.
+- `variable` is the variable name under which the option's argument value will
+  be available in your script.
+
+An option *may* define these other parameters :
+
+- `desc` is a description of the option, used in the help pages.
+- `short` is a single letter used for the short option syntax.
+- `argument` is the argument type. see [Argument types](#argument-types)
+- `default` is the value the option takes when the option is not specified in
+  the command typed by the user.
+- `value` is the value the option takes when the option *is* specified, but
+  without argument.
+
+The variables defined by options must always be defined, no matter what. This
+means that if you don't specify an option's `default`, running the main script
+without this option will return an error.
+
+In other words, if you want an option to be required, omit the `default`
+parameter in its definition.
+
+The `default` parameter works in a similar way. If you don't specify it, the
+option, when used, requires an argument. If you do, the option can be used
+without argument.
+
+Flag options work the same way, but since they don't take arguments, you must
+define both their `default` and `value` parameters.
+
 
 Auto-completion
 ---------------
