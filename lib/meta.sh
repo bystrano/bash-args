@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-_meta_get () {
+meta_get () {
 
     _meta_get_raw "$1" "${2-}" | tr -d '\n'
 }
@@ -44,7 +44,7 @@ _meta_parse_options () {
     _OPTIONS=("help")
     _OPTIONS_DEFS=("type=flag variable=help value=1 default=0 short=h desc='Show this help.'")
 
-    if [[ -n "$(_meta_get "version")" ]]; then
+    if [[ -n "$(meta_get "version")" ]]; then
         _OPTIONS+=("version")
         _OPTIONS_DEFS+=("type=flag variable=version value=1 default=0 desc='Show version informations.'")
     fi

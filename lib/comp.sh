@@ -72,7 +72,7 @@ _comp_complete () {
         fi
 
         if [[ $opt_arg_required -eq 0 ]]; then
-            arg_comp="$(_meta_get "argument" "${CMD-}")"
+            arg_comp="$(meta_get "argument" "${CMD-}")"
             _comp_complete_argument "$arg_comp"
 
             if [[ -z "${CMD-}" ]]; then

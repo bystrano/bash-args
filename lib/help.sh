@@ -20,12 +20,12 @@ _help_print_subcommand () {
 
 _help_print_version () {
 
-    printf '%s %s\n' "$SCRIPT_FILE" "$(_meta_get "version")"
+    printf '%s %s\n' "$SCRIPT_FILE" "$(meta_get "version")"
 }
 
 _help_summary () {
 
-    _meta_get "summary" "${1-}" | util_fmt "$TERM_WIDTH"
+    meta_get "summary" "${1-}" | util_fmt "$TERM_WIDTH"
 }
 
 _help_usage () {
@@ -34,10 +34,10 @@ _help_usage () {
     printf '\n\nUsage : '
 
     if [[ -z "${1-}" ]]; then
-        if [[ -n "${usage:="$(_meta_get "usage")"}" ]]; then
+        if [[ -n "${usage:="$(meta_get "usage")"}" ]]; then
             printf '%s' "$usage"
         else
-            if [[ -n "${argument:="$(_meta_get "argument")"}" ]]; then
+            if [[ -n "${argument:="$(meta_get "argument")"}" ]]; then
                 printf '%s [OPTIONS] [%s]' \
                        "$SCRIPT_FILE" \
                        "$(echo "$argument" | tr '[:lower:]' '[:upper:]')"
@@ -46,12 +46,12 @@ _help_usage () {
             fi
         fi
     else
-        if [[ -n "${usage:="$(_meta_get "usage" "$1")"}" ]]; then
+        if [[ -n "${usage:="$(meta_get "usage" "$1")"}" ]]; then
             printf "%s" "$usage"
         elif [[ "${CMD}" == "help" ]]; then
             printf "%s %s [OPTIONS]" "$SCRIPT_FILE" "${CMD_ARGS[0]}"
         else
-            if [[ -n "${argument:="$(_meta_get "argument" "${CMD}")"}" ]]; then
+            if [[ -n "${argument:="$(meta_get "argument" "${CMD}")"}" ]]; then
                 printf "%s %s [OPTIONS] [%s]" \
                        "$SCRIPT_FILE" \
                        "${CMD}" \
@@ -66,7 +66,7 @@ _help_usage () {
 _help_description () {
     local description
 
-    if [[ -n "${description:="$(_meta_get "description" "${1:-}")"}" ]]; then
+    if [[ -n "${description:="$(meta_get "description" "${1:-}")"}" ]]; then
         printf '\n\n'
         printf "%s" "$description" | util_fmt "$TERM_WIDTH"
     fi
@@ -104,7 +104,7 @@ _help_commands () {
                 printf "\n%$((cmd_col_width + 3))s%s" " " "$line"
             fi
             line_index=$((line_index + 1))
-        done <<< "$( _meta_get "summary" "$cmd" | util_fmt "$desc_col_width" )"
+        done <<< "$( meta_get "summary" "$cmd" | util_fmt "$desc_col_width" )"
     done
 }
 
