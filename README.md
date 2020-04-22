@@ -2,9 +2,8 @@ Bash-args
 =========
 
 This is a framework for writing bash scripts that accept options and/or
-arguments. The options and arguments accepted by your script are defined in the
-first comment block using a simple declarative syntax. _bash-args_ uses these
-metadata to:
+arguments. Define the options and arguments accepted by your script using a
+simple declarative syntax and let _bash-args_:
 
 - Parse the command arguments
 - Generate help pages
@@ -32,8 +31,7 @@ Table of contents
 Quickstart
 ----------
 
-To use _bash-args_ in your scripts, simply source `init.sh` before doing
-anything.
+To use _bash-args_ in your scripts, simply source `init.sh`.
 
 Here is an example script `eval-command.sh` :
 
