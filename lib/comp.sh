@@ -108,14 +108,14 @@ _comp_complete_argument () {
 
 _complete_file () {
 
-    for file in ${1-}*; do
+    for file in "${1-}"*; do
         COMP_REPLIES+=("$file")
     done
 }
 
 _complete_directory () {
 
-    for file in ${1-}*; do
+    for file in "${1-}"*; do
         if [[ -d "$file" ]]; then
             COMP_REPLIES+=("$file")
         fi

@@ -124,6 +124,7 @@ _opt_parse_args () {
         if [[ ! "$item" =~ ^- ]]; then
             if [[ -z ${CMD+x} ]]; then
 
+                # shellcheck disable=2235
                 if [[ "$item" == "_complete" ]]; then
                     # shellcheck disable=2034
                     _SILENT=1
