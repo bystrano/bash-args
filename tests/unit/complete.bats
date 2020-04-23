@@ -210,8 +210,8 @@ EOF
     assert_equals "$output" "$expected"
 }
 
-@test "$NAME _register_autocomplete" {
+@test "$NAME _register_completion" {
 
-    run ${SCRIPT_SUBCMD} _register_autocomplete
+    run ${SCRIPT_SUBCMD} _register_completion
     assert_equals "$output" "complete -C '$(pwd)/tests/fixtures/subcommands.sh _complete' subcommands.sh"
 }

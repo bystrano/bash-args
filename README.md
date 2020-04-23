@@ -7,31 +7,31 @@ simple declarative syntax and let _bash-args_:
 
 - Parse the command arguments
 - Generate help pages
-- Setup auto-completion
+- Handle auto-completion
 
 It is designed to be simple to use, to get out of the way, and to provide a
 polished CLI UX.
 
-It aims to be widely compatible, the test suite passes on all major versions of
-bash >= 3.2.
+It aims to be portable, the test suite passes on all major versions of
+bash >= 3.2.
 
 
 Table of contents
 ----------
 
-- [Quickstart](#quickstart)
-  - [Subcommands](#subcommands)
-- [Script metadatas](#script-metadatas)
+- [Quick start](#quick-start)
+  - [Sub-Commands](#sub-commands)
+- [Script metadata](#script-metadata)
 - [Defining options](#defining-options)
 - [Auto-completion](#auto-completion)
   - [Argument types](#argument-types)
   - [custom argument types](#custom-argument-types)
 
 
-Quickstart
+Quick start
 ----------
 
-To use _bash-args_ in your scripts, simply source `init.sh`.
+To use _bash-args_ in your scripts, simply source the `init.sh` file.
 
 Here is an example script `eval-command.sh` :
 
@@ -93,7 +93,7 @@ You can setup auto-completion with a simple command (that should probably be
 copied into some init file) :
 
 ```
-$ eval $(eval-command.sh _register_autocomplete)
+$ eval $(eval-command.sh _register_completion)
 ```
 
 A help page is generated automatically :
@@ -119,20 +119,18 @@ Options :
 ```
 
 
-### Subcommands ###
+### Sub-Commands ###
 
-_Bash-args_ provides a mecanism to define sub-commands that gives you the
-following features :
+_Bash-args_ provides a mechanism to define sub-commands in a nice and easy way :
 
-- The subcommands are listed in the main commands' help.
-- You can get a help page for a specific command by typing `main-script.sh help
-  subcmd1`, or `main-script.sh subcmd1 --help`.
-- Auto-completion for the subcommands and their options and arguments.
+- The sub-commands are listed in the main commands' help.
+- Help pages are available for each command using `main-script.sh help subcmd1`,
+  or `main-script.sh subcmd1 --help`.
+- Auto-completion for the sub-commands and their options and arguments.
 
-First, you need to call the `cmd_run` function at the end of your main script.
-
-Then, you define your subcommands by adding files in a special `cmd/` directory.
-Your project's structure should look like :
+To use these features, call the `cmd_run` function at the end of your main
+script, and define sub-commands by adding files in the `cmd/` directory. Your
+project's structure should look like :
 
 ```
 main-script.sh
@@ -141,32 +139,30 @@ cmd/
   - subcmd2.sh
 ```
 
-To document, and define the options and arguments of the subcommands, simply
-write metadatas in the first comment blocks of the subcommands, just like in the
+To document, and define the options and arguments of the sub-commands, simply
+write metadata in the first comment blocks of the sub-commands, just like in the
 main script.
 
-The options defined in the main script are valid for all subcommands, while
-options defined in a subcommand are specific to this subcommand.
+The options defined in the main script are available to all sub-commands, while
+options defined in a sub-command are specific to this sub-command.
 
 
-Script metadatas
+Script metadata
 -------------
 
-The script metadatas follow a very simple syntax: in the first comment block,
+The script metadata follow a very simple syntax: in the first comment block,
 each line that starts with a word followed by a semi-colon defines a new field,
 and everything that follows the semi-colon defines its value. The following
 lines, up to the next field start, are appended to the value.
 
-Here are the fields you can use to document your scripts. They are used to
-generate the help pages.
+Here are the fields used by *bash-args*.
 
 - **Summary :** A one line description of the script.
 - **Description :** A long description of the script.
-- **Version :** A version string. If your main script has a version meta field, it
-  will automatically be added the --version option that prints its name and
-  version.
-- **Usage :** If the automatically generated usage line in the help page doesn't
-  suit you, you can specify it here.
+- **Version :** A version string. If your main script has a version meta field,
+  it will get a `--version` option that prints its name and version.
+- **Usage :** If the generated usage line in the help page doesn't suit you, you
+  can specify it here.
 - **Argument :** Defines the argument type for auto-completion. see [Argument types](#argument-types)
 - **Options :** Define the options of your script. see [Defining options](#defining-options)
 
@@ -174,8 +170,7 @@ generate the help pages.
 Defining options
 ----------------
 
-The options are defined in the *Options* metadata, like shown in the example
-script :
+The options are defined in the *Options* metadata, like in the example script :
 
 ```bash
 # Options :
@@ -191,13 +186,13 @@ script :
 ```
 
 An option starts with a `%` followed by its name. Option names must contain only
-alpha-numeric characters, or `_` or `-`.
+alpha-numeric characters, `_` or `-`.
 
-The following lines define the option's parameter. When the script is run, this
+The following lines define the option's parameters. When the script is run, this
 is actually eval'd as bash code. The variables defined are the option's
 parameters. This means that the general quoting rules for strings apply, and
-that you can define the options dynamically, like in the example above, setting
-the `default` parameter of the `directory` option to `$(pwd)`.
+that you can define the options dynamically, like in the example above, in which
+the `default` parameter of the `directory` option is set to `$(pwd)`.
 
 An option *must* define at least the `type` and `variable` parameter :
 
@@ -209,32 +204,76 @@ An option *must* define at least the `type` and `variable` parameter :
 An option *may* define these other parameters :
 
 - `desc` is a description of the option, used in the help pages.
-- `short` is a single letter used for the short option syntax.
+- `short` is a single letter, used for the short option.
 - `argument` is the argument type. see [Argument types](#argument-types)
 - `default` is the value the option takes when the option is not specified in
   the command typed by the user.
 - `value` is the value the option takes when the option *is* specified, but
   without argument.
 
-The variables defined by options must always be defined, no matter what. This
-means that if you don't specify an option's `default`, running the main script
-without this option will return an error.
+The variables defined by options are guaranteed to be defined in your script :
+if *bash-args* can't find a value for an option, it will exit with an error.
+This means that if you don't specify an option's `default`, running the main
+script without this option will return an error.
 
-In other words, if you want an option to be required, omit the `default`
+In other words, if you don't want an option to be required, define a `default`
 parameter in its definition.
 
-The `default` parameter works in a similar way. If you don't specify it, the
+The `value` parameter works in a similar way. If you don't specify it, the
 option, when used, requires an argument. If you do, the option can be used
 without argument.
 
-Flag options work the same way, but since they don't take arguments, you must
+Flag options work the same way, and since they don't take arguments, you must
 define both their `default` and `value` parameters.
 
 
 Auto-completion
 ---------------
 
+*Bash-args* can handle auto-completion for your script using Bash's completion
+API. To activate auto-completion for your command run the following command :
+
+```bash
+eval $(my-command.sh _register_completion)
+```
+
+Tab-completion will then suggest the defined options if the word at point starts
+with an `-`, and suggest sub-commands and arguments otherwise.
+
+
 ### Argument types ###
+
+To tell *bash-args* what to suggest as an argument, you specify an *argument
+type* in the `Argument` metadata of your script (or sub-command), or in the
+`argument` parameter of an option.
+
+There are two argument types built-in *bash-args* :
+
+- **file** will suggest files.
+- **directory** will suggest directories.
+
 
 ### Custom argument types ###
 
+To create a new argument type and set it up for auto-completion, define a
+function called `_complete_my_arg_type`. Note that this function must be
+available to the `init.sh` script, so it has to be defined *before* the
+`. init.sh` line.
+
+The completion functions are supposed to add their suggestions to the global
+`COMP_REPLIES` array. They get the current word at point as parameter for
+convenience, but you can also use the `COMP_LINE` and `COMP_POINT` global
+variables, just like in all bash completion scripts.
+
+Here is how the **file** argument type is defined :
+
+```bash
+_complete_file () {
+
+    # $1 is the word being typed that we want to complete.
+    for file in "${1-}"*; do
+        # add each file to the completion candidates.
+        COMP_REPLIES+=("$file")
+    done
+}
+```
