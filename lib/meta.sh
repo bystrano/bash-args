@@ -55,14 +55,18 @@ _meta_parse_options () {
         if [[ "$line" =~ ^% ]]; then
             opt="${line:2}"
 
-            if [[ -n "$def" ]]; then
-                _meta_validate_opt_def "$opt" "$def"
-                _OPTIONS_DEFS+=("$def")
-                def=""
+            if [[ ! "$opt" =~ ^[[:alnum:]_-]+$ ]]; then
+                out_fatal_error "invalid option name : $opt"
             fi
 
             if [[ ${#_OPTIONS[@]} -gt 0 ]] && util_in_array "$opt" "${_OPTIONS[@]}"; then
                 out_fatal_error "duplicate option definitions : $opt"
+            fi
+
+            if [[ -n "$def" ]]; then
+                _meta_validate_opt_def "$opt" "$def"
+                _OPTIONS_DEFS+=("$def")
+                def=""
             fi
 
             # if a help option is defined, we remove the default one.

@@ -38,7 +38,13 @@ EOF
 }
 
 @test "$NAME options without variables not allowed" {
-    run bash tests/fixtures/invalid.sh
+    run bash tests/fixtures/invalid1.sh
     assert_equals "$status" 1
     assert_equals "$output" "$(fatal_error_format "missing \"variable\" parameter in option \"invalid-option\"")"
+}
+
+@test "$NAME invalid option name raises an error" {
+    run bash tests/fixtures/invalid2.sh
+    assert_equals "$status" 1
+    assert_equals "$output" "$(fatal_error_format "invalid option name : inv#lid-[]ption")"
 }
