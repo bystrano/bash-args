@@ -154,7 +154,6 @@ EOF
 }
 
 @test "$NAME auto-complete arguments on grouped short options" {
-    skip
     export COMP_LINE="options.sh -fO "
     export COMP_POINT=15
     run $SCRIPT_OPTIONS _complete

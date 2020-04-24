@@ -48,3 +48,15 @@ EOF
     assert_equals "$status" 1
     assert_equals "$output" "$(fatal_error_format "invalid option name : inv#lid-[]ption")"
 }
+
+@test "$NAME flag without value parameter raises an error" {
+    run bash tests/fixtures/invalid3.sh
+    assert_equals "$status" 1
+    assert_equals "$output" "$(fatal_error_format "option \"invalid\" is missing a \"value\" parameter")"
+}
+
+@test "$NAME flag without default parameter raises an error" {
+    run bash tests/fixtures/invalid4.sh
+    assert_equals "$status" 1
+    assert_equals "$output" "$(fatal_error_format "option \"invalid\" is missing a \"default\" parameter")"
+}

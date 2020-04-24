@@ -89,13 +89,18 @@ _meta_parse_options () {
 
 _meta_validate_opt_def () {
 
-    eval "$2; printf '%s-%s\n' \"\${variable-}\" \"\${type-}\"" | while IFS=- read -r variable type; do
+    eval "$2; printf '%s-%s-%s-%s\n' \"\${variable-}\" \"\${type-}\" \"\${value-}\" \"\${default-}\"" \
+        | while IFS=- read -r variable type value default; do
         if [[ -z "$variable" ]]; then
             out_fatal_error "missing \"variable\" parameter in option \"$1\""
         elif [[ -z "$type" ]]; then
             out_fatal_error "missing \"type\" parameter in option \"$1\""
         elif ! util_in_array "$type" "flag" "option"; then
             out_fatal_error "\"type\" parameter in option $1 should be either \"flag\" or \"option\""
+        elif [[ "$type" == "flag" ]] && [[ -z "$value" ]]; then
+            out_fatal_error "option \"$1\" is missing a \"value\" parameter"
+        elif [[ "$type" == "flag" ]] && [[ -z "$default" ]]; then
+            out_fatal_error "option \"$1\" is missing a \"default\" parameter"
         fi
     done
 }
