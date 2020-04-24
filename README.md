@@ -151,18 +151,13 @@ lines, up to the next field start, are appended to the value.
 Here are the fields used by *bash-args*.
 
 - **Summary :** A one line description of the script.
-
 - **Description :** A long description of the script.
-
 - **Version :** A version string. If your main script has a version meta field,
   it will get a `--version` option that prints its name and version.
-
 - **Usage :** If the default usage line in the help page doesn't suit you, you
   can override it here.
-
 - **Argument :** Defines the argument type used for auto-completion.
   see [Argument types](#argument-types)
-
 - **Options :** Define the options of your script.
   see [Defining options](#defining-options)
 
