@@ -25,7 +25,7 @@ Table of contents
 - [Defining options](#defining-options)
 - [Auto-completion](#auto-completion)
   - [Argument types](#argument-types)
-  - [custom argument types](#custom-argument-types)
+  - [Custom argument types](#custom-argument-types)
 
 
 Quick start

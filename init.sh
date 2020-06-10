@@ -14,8 +14,8 @@ TERM_WIDTH=${TERM_WIDTH:=80}
 CMDS_DIR=${CMDS_DIR:=cmd}
 
 
-##
-# Utility
+####
+## Utility
 
 # A reimplementation of readlink -f for non-GNU systems
 _readlink () {
